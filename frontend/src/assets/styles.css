@@ -3,10 +3,13 @@
   --pink-primary: #e91e7b;
   --pink-dark: #c2185b;
   --pink-light: #fce4ec;
+  --pink-soft: #f48fb1;
   --pink-bg: #fff0f5;
   --white: #ffffff;
+  --gray-dark: #1a1a2e;
   --text-dark: #2d2d2d;
   --text-light: #666666;
+  --font-heading: 'Playfair Display', Georgia, serif;
   --shadow: 0 4px 20px rgba(233, 30, 123, 0.15);
   --shadow-hover: 0 8px 30px rgba(233, 30, 123, 0.25);
   --radius: 16px;

@@ -2,183 +2,106 @@
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <div class="footer-logo">
-          <span>🧶</span>
-          <span class="footer-logo-name">Fios MJ</span>
-        </div>
+        <div class="footer-logo">🧶 <span>Fios MJ</span></div>
         <p class="footer-bio">
-          💗 Crochê artesanal | Mãe &amp; Filha<br />
+          💗 Crochê artesanal | Mãe &amp; Filha<br>
           🧶 Peças sob encomenda 🎁
         </p>
-        <div class="footer-socials">
-          <a
-            href="https://www.instagram.com/fiosmjcroche"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="social-link instagram"
-          >
-            📸 Instagram
-          </a>
-          <a
-            href="https://wa.me/5533999892409"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="social-link whatsapp"
-          >
-            💬 WhatsApp
-          </a>
-        </div>
       </div>
 
-      <div class="footer-links">
+      <div class="footer-nav">
         <h4>Navegação</h4>
-        <ul>
-          <li><a href="#inicio">Início</a></li>
-          <li><a href="#produtos">Produtos</a></li>
-          <li><a href="#como-pedir">Como Pedir</a></li>
-          <li><a href="#sobre">Sobre Nós</a></li>
-        </ul>
+        <a href="#produtos">Produtos</a>
+        <a href="#como-pedir">Como Pedir</a>
+        <a href="#sobre">Sobre Nós</a>
       </div>
 
       <div class="footer-contact">
         <h4>Contato</h4>
-        <ul>
-          <li>
-            <a
-              href="https://wa.me/5533999892409"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              💬 (33) 99989-2409
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://www.instagram.com/fiosmjcroche"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              📸 @fiosmjcroche
-            </a>
-          </li>
-          <li>🇧🇷 Minas Gerais, Brasil</li>
-        </ul>
+        <a href="https://wa.me/5533999892409" target="_blank" rel="noopener">
+          💬 (33) 99989-2409
+        </a>
+        <a href="https://instagram.com/fiosmjcroche" target="_blank" rel="noopener">
+          📸 @fiosmjcroche
+        </a>
+        <span class="location">📍 Minas Gerais, Brasil</span>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <div class="container">
-        <p>© 2026 Fios MJ · Crochê Artesanal · Feito com 💗</p>
-      </div>
+      <p>© 2026 Fios MJ · Crochê Artesanal · Feito com 💗</p>
     </div>
   </footer>
 </template>
 
+<script>
+export default { name: 'AppFooter' }
+</script>
+
 <style scoped>
 .footer {
-  background: var(--gray-dark);
-  color: rgba(255, 255, 255, 0.85);
+  background: #1a1a2e;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .footer-inner {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  gap: 48px;
-  padding: 60px 20px 40px;
+  gap: 40px;
+  padding: 50px 20px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.footer-logo span:first-child {
   font-size: 1.8rem;
+  margin-bottom: 14px;
 }
 
-.footer-logo-name {
-  font-family: var(--font-heading);
+.footer-logo span {
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.5rem;
-  color: var(--pink-soft);
   font-weight: 700;
+  color: #f48fb1;
+  margin-left: 6px;
 }
 
 .footer-bio {
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 20px;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.55);
 }
 
-.footer-socials {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.social-link {
-  padding: 8px 16px;
-  border-radius: 40px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: var(--transition);
-}
-
-.instagram {
-  background: rgba(233, 30, 123, 0.15);
-  color: var(--pink-soft);
-  border: 1px solid rgba(233, 30, 123, 0.3);
-}
-
-.instagram:hover {
-  background: var(--pink-primary);
-  color: white;
-}
-
-.whatsapp {
-  background: rgba(37, 211, 102, 0.15);
-  color: #7ffbb3;
-  border: 1px solid rgba(37, 211, 102, 0.3);
-}
-
-.whatsapp:hover {
-  background: #25d366;
-  color: white;
-}
-
-.footer-links h4,
-.footer-contact h4 {
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  color: var(--pink-soft);
-  margin-bottom: 18px;
-}
-
-.footer-links ul,
-.footer-contact ul {
-  list-style: none;
+.footer-nav,
+.footer-contact {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
-.footer-links li a,
-.footer-contact li a {
-  font-size: 0.9rem;
+.footer-nav h4,
+.footer-contact h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.1rem;
+  color: #f48fb1;
+  margin-bottom: 4px;
+}
+
+.footer-nav a,
+.footer-contact a {
   color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
   transition: color 0.2s;
 }
 
-.footer-links li a:hover,
-.footer-contact li a:hover {
-  color: var(--pink-soft);
+.footer-nav a:hover,
+.footer-contact a:hover {
+  color: #f48fb1;
 }
 
-.footer-contact li:not(:has(a)) {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.5);
+.location {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .footer-bottom {
@@ -188,15 +111,21 @@
 }
 
 .footer-bottom p {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.4);
 }
 
 @media (max-width: 768px) {
   .footer-inner {
     grid-template-columns: 1fr;
-    gap: 32px;
-    padding: 40px 20px 32px;
+    gap: 30px;
+    text-align: center;
+    padding: 40px 20px 30px;
+  }
+
+  .footer-nav,
+  .footer-contact {
+    align-items: center;
   }
 }
 </style>
