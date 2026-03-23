@@ -1,12 +1,25 @@
 <template>
   <div id="fiosmj-app">
-    <AppHeader />
+    <AppHeader @open-cart="cartOpen = true" />
     <HeroSection />
     <ProductGrid :products="products" />
     <HowToOrder />
     <AboutSection />
     <AppFooter />
     <WhatsAppFloat />
+
+    <!-- Cart Drawer -->
+    <CartDrawer
+      :open="cartOpen"
+      @close="cartOpen = false"
+      @checkout="openCheckout"
+    />
+
+    <!-- Checkout Form -->
+    <CheckoutForm
+      v-if="checkoutOpen"
+      @close="checkoutOpen = false"
+    />
   </div>
 </template>
 
@@ -18,6 +31,8 @@ import HowToOrder from './components/HowToOrder.vue'
 import AboutSection from './components/AboutSection.vue'
 import AppFooter from './components/AppFooter.vue'
 import WhatsAppFloat from './components/WhatsAppFloat.vue'
+import CartDrawer from './components/CartDrawer.vue'
+import CheckoutForm from './components/CheckoutForm.vue'
 
 export default {
   name: 'App',
@@ -28,11 +43,21 @@ export default {
     HowToOrder,
     AboutSection,
     AppFooter,
-    WhatsAppFloat
+    WhatsAppFloat,
+    CartDrawer,
+    CheckoutForm
   },
   data() {
     return {
-      products: []
+      products: [],
+      cartOpen: false,
+      checkoutOpen: false
+    }
+  },
+  methods: {
+    openCheckout() {
+      this.cartOpen = false
+      this.checkoutOpen = true
     }
   },
   async mounted() {

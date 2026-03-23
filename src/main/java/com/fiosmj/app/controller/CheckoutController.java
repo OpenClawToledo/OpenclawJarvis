@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/checkout")
@@ -20,12 +21,27 @@ public class CheckoutController {
     @PostMapping("/preference")
     public ResponseEntity<?> createPreference(@RequestBody CheckoutRequest req) {
         try {
-            // Build item
-            Map<String, Object> item = new LinkedHashMap<>();
-            item.put("title", req.getProductName());
-            item.put("quantity", req.getQuantity());
-            item.put("unit_price", req.getPrice());
-            item.put("currency_id", "BRL");
+            // Build items list for MP
+            List<Map<String, Object>> mpItems = req.getItems().stream().map(item -> {
+                Map<String, Object> mpItem = new LinkedHashMap<>();
+                mpItem.put("title", item.getProductName() != null ? item.getProductName() : "Produto Fios MJ");
+                mpItem.put("quantity", item.getQuantity() != null ? item.getQuantity() : 1);
+                mpItem.put("unit_price", item.getPrice() != null ? item.getPrice() : 0.0);
+                mpItem.put("currency_id", "BRL");
+                return mpItem;
+            }).collect(Collectors.toList());
+
+            // Build payer info
+            Map<String, Object> mpPayer = new LinkedHashMap<>();
+            if (req.getPayer() != null) {
+                mpPayer.put("name", req.getPayer().getName() != null ? req.getPayer().getName() : "");
+                String email = (req.getPayer().getEmail() != null && !req.getPayer().getEmail().isBlank())
+                    ? req.getPayer().getEmail()
+                    : "cliente@fiosmj.com";
+                mpPayer.put("email", email);
+            } else {
+                mpPayer.put("email", "cliente@fiosmj.com");
+            }
 
             // Build back_urls
             Map<String, String> backUrls = new LinkedHashMap<>();
@@ -35,10 +51,10 @@ public class CheckoutController {
 
             // Build request body
             Map<String, Object> body = new LinkedHashMap<>();
-            body.put("items", List.of(item));
+            body.put("items", mpItems);
+            body.put("payer", mpPayer);
             body.put("back_urls", backUrls);
             body.put("auto_return", "approved");
-            body.put("external_reference", String.valueOf(req.getProductId()));
 
             // Set headers
             HttpHeaders headers = new HttpHeaders();

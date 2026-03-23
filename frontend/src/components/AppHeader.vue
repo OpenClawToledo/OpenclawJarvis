@@ -13,6 +13,13 @@
           📸 Instagram
         </a>
       </nav>
+
+      <!-- Cart button -->
+      <button class="cart-btn" @click="$emit('open-cart')" aria-label="Abrir carrinho">
+        🛒
+        <span v-if="cartCount > 0" class="cart-badge">{{ cartCount > 99 ? '99+' : cartCount }}</span>
+      </button>
+
       <button class="menu-toggle" @click="menuOpen = !menuOpen" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
@@ -21,8 +28,15 @@
 </template>
 
 <script>
+import { useCart } from '../store/cart.js'
+
 export default {
   name: 'AppHeader',
+  emits: ['open-cart'],
+  setup() {
+    const { count } = useCart()
+    return { cartCount: count }
+  },
   data() {
     return { menuOpen: false }
   }
@@ -84,6 +98,52 @@ export default {
   font-weight: 600 !important;
 }
 
+/* Cart button */
+.cart-btn {
+  position: relative;
+  background: none;
+  border: 2px solid var(--pink-primary);
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--pink-primary);
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+}
+
+.cart-btn:hover {
+  background: var(--pink-primary);
+  color: white;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #e91e7b;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  border: 2px solid white;
+  line-height: 1;
+}
+
+.cart-btn:hover .cart-badge {
+  background: white;
+  color: #e91e7b;
+}
+
 .menu-toggle {
   display: none;
   flex-direction: column;
@@ -120,6 +180,7 @@ export default {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     transform: translateY(-120%);
     transition: transform 0.3s ease;
+    z-index: 99;
   }
 
   .nav.open {

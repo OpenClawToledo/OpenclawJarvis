@@ -18,7 +18,7 @@
         R$ {{ product.price.toFixed(2).replace('.', ',') }}
       </div>
 
-      <!-- Size selector for products with sizes (checkout) -->
+      <!-- Size selector for products with sizes -->
       <div v-if="product.sizes && product.sizes.length" class="size-select-wrap">
         <label class="size-select-label">Tamanho para compra:</label>
         <select v-model="selectedSize" class="size-select">
@@ -34,19 +34,21 @@
         💬 Pedir pelo WhatsApp
       </a>
 
-      <!-- Buy now button -->
+      <!-- Add to cart button -->
       <button
         class="btn-buy btn-order"
-        :disabled="loading"
-        @click="handleBuy"
+        :class="{ added: justAdded }"
+        @click="handleAddToCart"
       >
-        {{ loading ? 'Processando...' : '🛒 Comprar agora' }}
+        {{ justAdded ? 'Adicionado! ✓' : '🛍️ Adicionar ao carrinho' }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
+import { useCart } from '../store/cart.js'
+
 export default {
   name: 'ProductCard',
   props: {
@@ -54,8 +56,8 @@ export default {
   },
   data() {
     return {
-      loading: false,
-      selectedSize: ''
+      selectedSize: '',
+      justAdded: false
     }
   },
   computed: {
@@ -63,50 +65,18 @@ export default {
       const name = this.product.name.replace(/[\u{1F000}-\u{1FFFF}]/gu, '').trim()
       const msg = encodeURIComponent(`Olá! Tenho interesse no produto: ${name}. Pode me dar mais informações? 🧶`)
       return `https://wa.me/5533999892409?text=${msg}`
-    },
-    checkoutPrice() {
-      if (this.product.sizes && this.product.sizes.length) {
-        return this.selectedSize ? this.selectedSize.price : null
-      }
-      return this.product.price
     }
   },
   methods: {
-    async handleBuy() {
-      // Validate size selection
+    handleAddToCart() {
       if (this.product.sizes && this.product.sizes.length && !this.selectedSize) {
-        alert('Por favor, selecione um tamanho antes de continuar.')
+        alert('Por favor, selecione um tamanho antes de adicionar ao carrinho.')
         return
       }
-
-      this.loading = true
-      try {
-        const response = await fetch('/api/checkout/preference', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            productId: this.product.id,
-            productName: this.product.name,
-            price: this.checkoutPrice,
-            quantity: 1
-          })
-        })
-
-        if (!response.ok) {
-          throw new Error(`Erro ${response.status}: ${response.statusText}`)
-        }
-
-        const data = await response.json()
-        if (data.init_point) {
-          window.location.href = data.init_point
-        } else {
-          throw new Error(data.error || 'Resposta inválida do servidor')
-        }
-      } catch (err) {
-        alert('Erro ao processar pagamento: ' + err.message)
-      } finally {
-        this.loading = false
-      }
+      const { addItem } = useCart()
+      addItem(this.product, 1, this.selectedSize || null)
+      this.justAdded = true
+      setTimeout(() => { this.justAdded = false }, 1500)
     }
   }
 }
@@ -235,7 +205,7 @@ export default {
   border-radius: var(--radius, 8px);
   font-weight: 600;
   text-decoration: none;
-  transition: opacity 0.2s, transform 0.1s;
+  transition: opacity 0.2s, transform 0.1s, background 0.2s;
 }
 
 .btn-whatsapp {
@@ -255,13 +225,12 @@ export default {
   font-family: inherit;
 }
 
-.btn-buy:hover:not(:disabled) {
+.btn-buy:hover {
   opacity: 0.9;
   transform: translateY(-1px);
 }
 
-.btn-buy:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+.btn-buy.added {
+  background: #2ecc71;
 }
 </style>
