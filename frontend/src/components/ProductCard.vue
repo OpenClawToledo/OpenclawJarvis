@@ -1,8 +1,10 @@
 <template>
-  <div class="product-card">
+  <div class="product-card" @click="handleCardClick">
     <div class="product-image-wrap">
       <img :src="product.imageUrl" :alt="product.name" class="product-image" loading="lazy" />
       <span class="product-category">{{ product.category }}</span>
+      <span v-if="product.stock === 0" class="stock-badge out">Esgotado</span>
+      <span v-else-if="product.stock <= 3" class="stock-badge low">⚡ Últimas unidades!</span>
     </div>
     <div class="product-info">
       <h3 class="product-name">{{ product.name }}</h3>
@@ -19,7 +21,7 @@
       </div>
 
       <!-- Size selector for products with sizes -->
-      <div v-if="product.sizes && product.sizes.length" class="size-select-wrap">
+      <div v-if="product.sizes && product.sizes.length" class="size-select-wrap" @click.stop>
         <label class="size-select-label">Tamanho para compra:</label>
         <select v-model="selectedSize" class="size-select">
           <option value="" disabled>Selecione o tamanho</option>
@@ -30,17 +32,18 @@
       </div>
 
       <!-- WhatsApp button -->
-      <a :href="whatsappUrl" target="_blank" rel="noopener" class="btn-whatsapp btn-order">
+      <a :href="whatsappUrl" target="_blank" rel="noopener" class="btn-whatsapp btn-order" @click.stop>
         💬 Pedir pelo WhatsApp
       </a>
 
       <!-- Add to cart button -->
       <button
         class="btn-buy btn-order"
-        :class="{ added: justAdded }"
-        @click="handleAddToCart"
+        :class="{ added: justAdded, disabled: product.stock === 0 }"
+        :disabled="product.stock === 0"
+        @click.stop="handleAddToCart"
       >
-        {{ justAdded ? 'Adicionado! ✓' : '🛍️ Adicionar ao carrinho' }}
+        {{ product.stock === 0 ? '❌ Esgotado' : justAdded ? 'Adicionado! ✓' : '🛍️ Adicionar ao carrinho' }}
       </button>
     </div>
   </div>
@@ -54,6 +57,7 @@ export default {
   props: {
     product: { type: Object, required: true }
   },
+  emits: ['open-product'],
   data() {
     return {
       selectedSize: '',
@@ -68,7 +72,11 @@ export default {
     }
   },
   methods: {
+    handleCardClick() {
+      this.$emit('open-product', this.product)
+    },
     handleAddToCart() {
+      if (this.product.stock === 0) return
       if (this.product.sizes && this.product.sizes.length && !this.selectedSize) {
         alert('Por favor, selecione um tamanho antes de adicionar ao carrinho.')
         return
@@ -124,6 +132,20 @@ export default {
   font-size: 0.8rem;
   font-weight: 600;
 }
+
+.stock-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.stock-badge.out { background: #ff5252; color: white; }
+.stock-badge.low { background: #ff9800; color: white; }
+
+.product-card { cursor: pointer; }
 
 .product-info {
   padding: 20px;
@@ -232,5 +254,10 @@ export default {
 
 .btn-buy.added {
   background: #2ecc71;
+}
+
+.btn-buy.disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 </style>

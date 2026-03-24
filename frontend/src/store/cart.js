@@ -1,6 +1,28 @@
-import { reactive, computed } from 'vue'
+import { reactive, computed, watch } from 'vue'
 
-const state = reactive({ items: [] })
+const CART_KEY = 'fiosmj_cart'
+
+// Load initial state from localStorage
+function loadFromLocal() {
+  try {
+    const raw = localStorage.getItem(CART_KEY)
+    if (raw) return JSON.parse(raw)
+  } catch {}
+  return []
+}
+
+const state = reactive({ items: loadFromLocal() })
+
+// Watch for changes and save to localStorage
+watch(
+  () => [...state.items],
+  (items) => {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(items))
+    } catch {}
+  },
+  { deep: true }
+)
 
 const syncToServer = async (items) => {
   const token = localStorage.getItem('fiosmj_token')
@@ -36,12 +58,14 @@ export function useCart() {
     } else {
       state.items.push({ key, product, selectedSize, price, quantity })
     }
+    localStorage.setItem(CART_KEY, JSON.stringify(state.items))
     syncToServer(state.items)
   }
 
   const removeItem = (key) => {
     const idx = state.items.findIndex(i => i.key === key)
     if (idx > -1) state.items.splice(idx, 1)
+    localStorage.setItem(CART_KEY, JSON.stringify(state.items))
     syncToServer(state.items)
   }
 
@@ -52,12 +76,14 @@ export function useCart() {
     if (item.quantity <= 0) {
       removeItem(key)
     } else {
+      localStorage.setItem(CART_KEY, JSON.stringify(state.items))
       syncToServer(state.items)
     }
   }
 
   const clearCart = () => {
     state.items.splice(0)
+    localStorage.removeItem(CART_KEY)
     const token = localStorage.getItem('fiosmj_token')
     if (token) {
       fetch('/api/cart', {
@@ -70,12 +96,12 @@ export function useCart() {
   const loadFromServer = async () => {
     const token = localStorage.getItem('fiosmj_token')
     if (!token) return
-    // Only load server cart if local cart is empty
+    // If local cart has items, prioritize local and sync to server
     if (state.items.length > 0) {
-      // Local has priority — sync local to server
       syncToServer(state.items)
       return
     }
+    // Local is empty — try server
     try {
       const res = await fetch('/api/cart', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -83,7 +109,6 @@ export function useCart() {
       if (!res.ok) return
       const data = await res.json()
       if (data.items && data.items.length > 0) {
-        // Rebuild cart items from server data
         for (const item of data.items) {
           const product = { id: item.productId, name: item.productName, price: item.price }
           const selectedSize = item.selectedSize ? { size: item.selectedSize, price: item.price } : null
@@ -92,6 +117,7 @@ export function useCart() {
             state.items.push({ key, product, selectedSize, price: item.price, quantity: item.quantity })
           }
         }
+        localStorage.setItem(CART_KEY, JSON.stringify(state.items))
       }
     } catch {
       // silent fail

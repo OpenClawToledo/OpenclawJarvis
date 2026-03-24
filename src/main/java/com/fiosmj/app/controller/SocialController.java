@@ -24,11 +24,13 @@ public class SocialController {
 
     // ─── TESTIMONIALS ────────────────────────────────────────────────────────
 
-    /** Todos os feedbacks aprovados */
+    /** Todos os feedbacks aprovados (ou filtrados por produto) */
     @GetMapping("/testimonials")
-    public List<Map<String, Object>> getTestimonials() {
-        return testimonialRepo.findByApprovedTrueOrderByCreatedAtDesc()
-            .stream().map(this::toTestimonialMap).collect(Collectors.toList());
+    public List<Map<String, Object>> getTestimonials(@RequestParam(required = false) Long productId) {
+        List<Testimonial> list = productId != null
+            ? testimonialRepo.findByApprovedTrueAndProductIdOrderByCreatedAtDesc(productId)
+            : testimonialRepo.findByApprovedTrueOrderByCreatedAtDesc();
+        return list.stream().map(this::toTestimonialMap).collect(Collectors.toList());
     }
 
     /** Vitrine "Presenteou com Amor" — com ocasião definida */
@@ -222,6 +224,7 @@ public class SocialController {
         m.put("imageUrl", t.getImageUrl());
         m.put("occasion", t.getOccasion());
         m.put("featured", t.isFeatured());
+        m.put("productId", t.getProductId());
         m.put("createdAt", t.getCreatedAt());
         return m;
     }

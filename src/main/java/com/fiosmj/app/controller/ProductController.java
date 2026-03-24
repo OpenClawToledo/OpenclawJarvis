@@ -26,7 +26,8 @@ public class ProductController {
                 Map.of("size", "P", "price", 100.0),
                 Map.of("size", "M", "price", 120.0),
                 Map.of("size", "G", "price", 150.0)
-            )
+            ),
+            5
         ));
 
         // 2. Amigurumi Nossa Senhora 🙏
@@ -37,7 +38,8 @@ public class ProductController {
             80.0,
             "/img/nossa-senhora.jpg",
             "Amigurumi",
-            null
+            null,
+            3
         ));
 
         // 3. Caneta Decorada ✏️
@@ -48,7 +50,8 @@ public class ProductController {
             20.0,
             "/img/caneta.jpg",
             "Acessórios",
-            null
+            null,
+            10
         ));
 
         // 4. Produto Teste 🧪
@@ -59,7 +62,8 @@ public class ProductController {
             6.10,
             "/img/caneta.jpg",
             "Teste",
-            null
+            null,
+            99
         ));
     }
 

@@ -22,6 +22,9 @@ public class Testimonial {
     private boolean featured = false; // destaque na vitrine
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    // Link ao produto (opcional)
+    private Long productId;
+
     // Link ao cliente registrado (opcional — pode ser anônimo)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
@@ -51,4 +54,6 @@ public class Testimonial {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public Customer getCustomer() { return customer; }
     public void setCustomer(Customer customer) { this.customer = customer; }
+    public Long getProductId() { return productId; }
+    public void setProductId(Long productId) { this.productId = productId; }
 }

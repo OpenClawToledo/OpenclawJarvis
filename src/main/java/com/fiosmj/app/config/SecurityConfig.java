@@ -32,12 +32,22 @@ public class SecurityConfig {
                     "/api/products/**",
                     "/api/checkout/**",
                     "/api/social/**",
-                    "/api/checkout/webhook"
+                    "/api/checkout/webhook",
+                    "/api/newsletter/**",
+                    "/api/blog/**",
+                    "/api/contact",
+                    "/politica-de-privacidade",
+                    "/termos-e-condicoes",
+                    "/contacto",
+                    "/api/blog/**",
+                    "/api/admin/blog/**",
+                    "/api/contact"
                 ).permitAll()
                 // Permit all static resources and page routes
                 .requestMatchers(
                     "/", "/index.html",
                     "/obrigado", "/pendente",
+                    "/politica-de-privacidade", "/termos-e-condicoes", "/contacto",
                     "/assets/**", "/img/**",
                     "/*.js", "/*.css", "/*.ico", "/*.png", "/*.jpg", "/*.svg"
                 ).permitAll()

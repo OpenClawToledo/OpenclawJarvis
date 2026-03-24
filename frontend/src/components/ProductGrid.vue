@@ -4,11 +4,19 @@
       <h2 class="section-title">✨ Nossos Produtos</h2>
       <p class="section-subtitle">Peças artesanais únicas, feitas sob encomenda com muito carinho</p>
 
-      <div class="products-grid">
+      <ProductFilters :products="products" @update:filtered="filteredProducts = $event" />
+
+      <div v-if="filteredProducts.length === 0" class="no-results">
+        <span>😔</span>
+        <p>Nenhum produto encontrado nessa categoria.</p>
+      </div>
+
+      <div v-else class="products-grid">
         <ProductCard
-          v-for="product in products"
+          v-for="product in filteredProducts"
           :key="product.id"
           :product="product"
+          @open-product="$emit('open-product', $event)"
         />
       </div>
 
@@ -29,12 +37,27 @@
 
 <script>
 import ProductCard from './ProductCard.vue'
+import ProductFilters from './ProductFilters.vue'
 
 export default {
   name: 'ProductGrid',
-  components: { ProductCard },
+  components: { ProductCard, ProductFilters },
   props: {
     products: { type: Array, default: () => [] }
+  },
+  emits: ['open-product'],
+  data() {
+    return {
+      filteredProducts: []
+    }
+  },
+  watch: {
+    products: {
+      immediate: true,
+      handler(val) {
+        this.filteredProducts = val
+      }
+    }
   }
 }
 </script>
@@ -51,6 +74,19 @@ export default {
   gap: 30px;
   margin-bottom: 40px;
 }
+
+.no-results {
+  text-align: center;
+  padding: 48px;
+  color: #aaa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+}
+
+.no-results span { font-size: 2.5rem; }
 
 .products-cta {
   text-align: center;

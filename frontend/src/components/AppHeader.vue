@@ -14,6 +14,9 @@
         </a>
       </nav>
 
+      <!-- Search Bar -->
+      <SearchBar :products="products" @select-product="$emit('open-product', $event)" class="header-search" />
+
       <!-- Account button -->
       <div class="account-wrap" v-if="isLoggedIn" ref="accountRef">
         <button class="account-btn" @click="dropdownOpen = !dropdownOpen">
@@ -47,9 +50,15 @@ import { useCart } from '../store/cart.js'
 import { useAuth } from '../store/auth.js'
 import { computed } from 'vue'
 
+import SearchBar from './SearchBar.vue'
+
 export default {
   name: 'AppHeader',
-  emits: ['open-cart', 'open-auth', 'open-orders'],
+  components: { SearchBar },
+  props: {
+    products: { type: Array, default: () => [] }
+  },
+  emits: ['open-cart', 'open-auth', 'open-orders', 'open-product'],
   setup() {
     const { count } = useCart()
     const { customer, isLoggedIn, logout } = useAuth()
@@ -268,7 +277,12 @@ export default {
   transition: var(--transition);
 }
 
+.header-search {
+  flex: 0 1 240px;
+}
+
 @media (max-width: 768px) {
+  .header-search { display: none; }
   .menu-toggle {
     display: flex;
   }

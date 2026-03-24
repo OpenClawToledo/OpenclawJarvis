@@ -11,6 +11,7 @@ public class Product {
     private String imageUrl;
     private String category;
     private List<Map<String, Object>> sizes; // [{size: "P", price: 100.0}, ...]
+    private Integer stock;
 
     public Product() {}
 
@@ -23,6 +24,12 @@ public class Product {
         this.imageUrl = imageUrl;
         this.category = category;
         this.sizes = sizes;
+    }
+
+    public Product(Long id, String name, String description, Double price,
+                   String imageUrl, String category, List<Map<String, Object>> sizes, Integer stock) {
+        this(id, name, description, price, imageUrl, category, sizes);
+        this.stock = stock;
     }
 
     public Long getId() { return id; }
@@ -45,4 +52,7 @@ public class Product {
 
     public List<Map<String, Object>> getSizes() { return sizes; }
     public void setSizes(List<Map<String, Object>> sizes) { this.sizes = sizes; }
+
+    public Integer getStock() { return stock; }
+    public void setStock(Integer stock) { this.stock = stock; }
 }
