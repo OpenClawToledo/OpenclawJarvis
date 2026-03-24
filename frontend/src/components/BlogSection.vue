@@ -57,7 +57,7 @@ export default {
   async mounted() {
     try {
       const res = await fetch('/api/blog')
-      if (res.ok) this.posts = (await res.json()).slice(0, 3)
+      if (res.ok) this.posts = (await res.json()).slice(0, 4)
     } catch {}
     this.loading = false
   }
