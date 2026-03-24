@@ -6,6 +6,7 @@ public class CheckoutRequest {
     private List<CheckoutItem> items;
     private PayerInfo payer;
     private AddressInfo address;
+    private String externalReference; // order ID para linkar com webhook
 
     public CheckoutRequest() {}
 
@@ -17,6 +18,8 @@ public class CheckoutRequest {
 
     public AddressInfo getAddress() { return address; }
     public void setAddress(AddressInfo address) { this.address = address; }
+    public String getExternalReference() { return externalReference; }
+    public void setExternalReference(String externalReference) { this.externalReference = externalReference; }
 
     // ── Inner classes ──────────────────────────────────────────────────────────
 

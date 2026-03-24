@@ -31,7 +31,8 @@ public class SecurityConfig {
                     "/api/auth/**",
                     "/api/products/**",
                     "/api/checkout/**",
-                    "/api/social/**"
+                    "/api/social/**",
+                    "/api/checkout/webhook"
                 ).permitAll()
                 // Permit all static resources and page routes
                 .requestMatchers(

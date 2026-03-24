@@ -71,6 +71,11 @@ public class CheckoutController {
             body.put("payer", mpPayer);
             body.put("back_urls", backUrls);
             body.put("auto_return", "approved");
+            body.put("notification_url", "https://fiosmj.com/api/checkout/webhook");
+            // external_reference: usado pelo webhook para identificar o pedido
+            if (req.getExternalReference() != null) {
+                body.put("external_reference", req.getExternalReference());
+            }
 
             // Set headers
             HttpHeaders headers = new HttpHeaders();

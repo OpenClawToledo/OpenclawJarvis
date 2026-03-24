@@ -50,6 +50,17 @@ public class ProductController {
             "Acessórios",
             null
         ));
+
+        // 4. Produto Teste 🧪
+        products.add(new Product(
+            4L,
+            "Produto Teste 🧪",
+            "Produto de teste para validar o fluxo de pagamento. Valor simbólico de 1€ (R$6,10). Pode remover após os testes!",
+            6.10,
+            "/img/caneta.jpg",
+            "Teste",
+            null
+        ));
     }
 
     @GetMapping("/products")

@@ -36,10 +36,27 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<?> createOrder(@AuthenticationPrincipal Customer customer, @RequestBody Map<String, Object> body) {
         if (customer == null) return ResponseEntity.status(401).body(Map.of("error", "Não autenticado"));
-
         Order order = buildOrderFromBody(body, customer);
         orderRepository.save(order);
         return ResponseEntity.ok(orderToMap(order));
+    }
+
+    /** Atualiza preferenceId e initPoint de um pedido existente */
+    @PatchMapping("/{id}/preference")
+    public ResponseEntity<?> updatePreference(
+            @AuthenticationPrincipal Customer customer,
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> body) {
+        if (customer == null) return ResponseEntity.status(401).body(Map.of("error", "Não autenticado"));
+        return orderRepository.findById(id)
+            .filter(o -> o.getCustomer().getId().equals(customer.getId()))
+            .map(o -> {
+                if (body.get("preferenceId") != null) o.setPreferenceId((String) body.get("preferenceId"));
+                if (body.get("initPoint") != null) o.setInitPoint((String) body.get("initPoint"));
+                orderRepository.save(o);
+                return ResponseEntity.ok(orderToMap(o));
+            })
+            .orElse(ResponseEntity.notFound().build());
     }
 
     public static Order buildOrderFromBody(Map<String, Object> body, Customer customer) {
