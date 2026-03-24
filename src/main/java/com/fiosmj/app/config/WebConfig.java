@@ -25,7 +25,13 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Assets com hash no nome → cache longo
+        registry.addResourceHandler("/assets/**")
+            .addResourceLocations("classpath:/static/assets/")
+            .setCacheControl(org.springframework.http.CacheControl.maxAge(365, java.util.concurrent.TimeUnit.DAYS));
+        // index.html e outros → sem cache (sempre fresco)
         registry.addResourceHandler("/**")
-            .addResourceLocations("classpath:/static/");
+            .addResourceLocations("classpath:/static/")
+            .setCacheControl(org.springframework.http.CacheControl.noCache());
     }
 }

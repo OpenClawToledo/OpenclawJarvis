@@ -70,7 +70,8 @@ export default {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding-top: 70px;
+  padding-top: 90px;
+  padding-bottom: 40px;
   overflow: hidden;
   position: relative;
 }
@@ -211,11 +212,18 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .hero-title { font-size: 2.8rem; }
-  .hero-tagline { font-size: 1.15rem; }
-  .hero-inner { flex-direction: column; text-align: center; }
+  .hero-title { font-size: 2.4rem; }
+  .hero-tagline { font-size: 1.05rem; }
+  .hero-subtitle { font-size: 1rem; margin-bottom: 24px; }
+  .hero-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 24px;
+    justify-content: center;
+  }
+  .hero-content { max-width: 100%; }
   .hero-actions { justify-content: center; }
-  .yarn-ball { font-size: 6rem; }
+  .yarn-ball { font-size: 5rem; }
   .bg-col.col-3 { display: none; }
 }
 </style>
