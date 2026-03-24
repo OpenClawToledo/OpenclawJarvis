@@ -1,6 +1,7 @@
 <template>
   <div id="fiosmj-app">
     <VisitCounter />
+    <SocialProof :user-name="authState && authState.customer ? authState.customer.name : null" />
 
     <!-- ─── PRODUCT PAGE ─── -->
     <template v-if="currentView.name === 'product' && currentProduct">
@@ -134,6 +135,7 @@ import ProductPage from './components/ProductPage.vue'
 import BlogSection from './components/BlogSection.vue'
 import BlogPost from './components/BlogPost.vue'
 import VisitCounter from './components/VisitCounter.vue'
+import SocialProof from './components/SocialProof.vue'
 import BrandsSection from './components/BrandsSection.vue'
 import { useAuth } from './store/auth.js'
 
@@ -159,11 +161,12 @@ export default {
     BlogSection,
     BlogPost,
     VisitCounter,
+    SocialProof,
     BrandsSection
   },
   setup() {
-    const { loadMe } = useAuth()
-    return { loadMe }
+    const auth = useAuth()
+    return { loadMe: auth.loadMe, authState: auth.customer }
   },
   data() {
     return {

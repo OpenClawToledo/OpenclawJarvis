@@ -42,7 +42,8 @@ public class SecurityConfig {
                     "/api/blog/**",
                     "/api/admin/blog/**",
                     "/api/contact",
-                    "/api/stats/**"
+                    "/api/stats/**",
+                    "/api/presence/**"
                 ).permitAll()
                 // Permit all static resources and page routes
                 .requestMatchers(
