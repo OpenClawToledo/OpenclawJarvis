@@ -55,6 +55,14 @@ public class CheckoutController {
                     ? req.getPayer().getEmail()
                     : "cliente@fiosmj.com";
                 mpPayer.put("email", email);
+                // CPF obrigatório para boleto
+                String cpf = req.getPayer().getCpf();
+                if (cpf != null && !cpf.isBlank()) {
+                    Map<String, String> identification = new LinkedHashMap<>();
+                    identification.put("type", "CPF");
+                    identification.put("number", cpf.replaceAll("[^0-9]", ""));
+                    mpPayer.put("identification", identification);
+                }
             } else {
                 mpPayer.put("email", "cliente@fiosmj.com");
             }

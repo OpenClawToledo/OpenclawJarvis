@@ -52,6 +52,7 @@ public class CheckoutRequest {
         private String name;
         private String email;
         private String phone;
+        private String cpf;
 
         public PayerInfo() {}
 
@@ -63,6 +64,9 @@ public class CheckoutRequest {
 
         public String getPhone() { return phone; }
         public void setPhone(String phone) { this.phone = phone; }
+
+        public String getCpf() { return cpf; }
+        public void setCpf(String cpf) { this.cpf = cpf; }
     }
 
     public static class AddressInfo {

@@ -30,6 +30,19 @@
                   <input v-model="form.email" type="email" placeholder="seu@email.com" required />
                 </div>
               </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>CPF <span class="label-hint">(obrigatório para boleto)</span></label>
+                  <input
+                    v-model="form.cpf"
+                    type="text"
+                    placeholder="000.000.000-00"
+                    maxlength="14"
+                    @input="formatCpf"
+                  />
+                </div>
+              </div>
             </section>
 
             <!-- Endereço -->
@@ -147,6 +160,7 @@ export default {
         name: '',
         phone: '',
         email: '',
+        cpf: '',
         cep: '',
         street: '',
         number: '',
@@ -176,6 +190,14 @@ export default {
     }
   },
   methods: {
+    formatCpf() {
+      let v = this.form.cpf.replace(/\D/g, '')
+      if (v.length > 9) v = v.slice(0, 3) + '.' + v.slice(3, 6) + '.' + v.slice(6, 9) + '-' + v.slice(9, 11)
+      else if (v.length > 6) v = v.slice(0, 3) + '.' + v.slice(3, 6) + '.' + v.slice(6)
+      else if (v.length > 3) v = v.slice(0, 3) + '.' + v.slice(3)
+      this.form.cpf = v
+    },
+
     formatCep() {
       let v = this.form.cep.replace(/\D/g, '')
       if (v.length > 5) v = v.slice(0, 5) + '-' + v.slice(5, 8)
@@ -223,7 +245,8 @@ export default {
           payer: {
             name: this.form.name,
             email: this.form.email || 'cliente@fiosmj.com',
-            phone: this.form.phone
+            phone: this.form.phone,
+            cpf: this.form.cpf ? this.form.cpf.replace(/\D/g, '') : null
           },
           address: {
             cep: this.form.cep,
@@ -453,6 +476,12 @@ export default {
 
 .btn-cep:hover:not(:disabled) { opacity: 0.85; }
 .btn-cep:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.label-hint {
+  font-weight: 400;
+  color: #aaa;
+  font-size: 0.78rem;
+}
 
 .field-error {
   font-size: 0.8rem;
