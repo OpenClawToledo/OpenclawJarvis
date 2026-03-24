@@ -2,7 +2,7 @@
   <header class="header">
     <div class="container header-inner">
       <a href="#" class="logo">
-        <img src="/img/logo-fiosmj.jpg" alt="Fios MJ — Artes em Crochê" class="logo-img" />
+        <img :src="logoSrc" alt="Fios MJ — Artes em Crochê" class="logo-img" />
       </a>
       <nav class="nav" :class="{ open: menuOpen }">
         <a href="#produtos" @click="menuOpen = false">Produtos</a>
@@ -67,7 +67,8 @@ export default {
   data() {
     return {
       menuOpen: false,
-      dropdownOpen: false
+      dropdownOpen: false,
+      logoSrc: '/img/logo-fiosmj.jpg'
     }
   },
   mounted() {
