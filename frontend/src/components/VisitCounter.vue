@@ -24,7 +24,16 @@ export default {
   },
   async mounted() {
     try {
-      const res = await fetch('/api/stats/visits', { method: 'POST' })
+      const alreadyCounted = localStorage.getItem('fiosmj_counted')
+      let res
+      if (alreadyCounted) {
+        // Dispositivo já contado — só lê
+        res = await fetch('/api/stats/visits')
+      } else {
+        // Primeira visita deste aparelho — incrementa e marca
+        res = await fetch('/api/stats/visits', { method: 'POST' })
+        if (res.ok) localStorage.setItem('fiosmj_counted', '1')
+      }
       if (res.ok) {
         const data = await res.json()
         this.count = data.count
