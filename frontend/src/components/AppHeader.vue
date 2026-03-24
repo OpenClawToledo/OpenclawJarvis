@@ -101,11 +101,12 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
-  background: rgba(253, 248, 242, 0.96);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 2px 20px rgba(196, 115, 106, 0.12);
-  border-bottom: 1px solid rgba(232, 213, 190, 0.5);
+  z-index: 200;
+  background: #FDF8F2;
+  box-shadow: 0 2px 12px rgba(196, 115, 106, 0.15);
+  border-bottom: 1px solid #E8D5BE;
+  /* Necessário para o dropdown absolute funcionar */
+  isolation: isolate;
 }
 
 .header-inner {
@@ -287,36 +288,48 @@ export default {
 }
 
 @media (max-width: 768px) {
+  /* Esconder barra de pesquisa */
   .header-search { display: none; }
-  .menu-toggle {
-    display: flex;
-  }
 
+  /* Mostrar hamburger */
+  .menu-toggle { display: flex; }
+
+  /* Nav: dropdown em cascata — absolute ao header, não fixed */
   .nav {
-    position: fixed;
+    position: absolute;
     top: 70px;
     left: 0;
     right: 0;
-    background: white;
+    background: #FDF8F2;
+    border-top: 1px solid #E8D5BE;
+    border-bottom: 2px solid #C4736A;
     flex-direction: column;
-    padding: 20px;
-    gap: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    transform: translateY(-120%);
-    transition: transform 0.3s ease;
-    z-index: 99;
+    align-items: flex-start;
+    padding: 0;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    z-index: 199;
+    /* Sem position:fixed — não interfere com scroll */
   }
 
   .nav.open {
-    transform: translateY(0);
+    max-height: 400px;
+    padding: 4px 0;
   }
 
   .nav a {
-    font-size: 1.1rem;
+    display: block;
+    width: 100%;
+    padding: 14px 24px;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(232,213,190,0.4);
   }
+  .nav a:last-child { border-bottom: none; }
+  .nav a:active { background: rgba(196,115,106,0.08); }
 
-  .account-btn span:not(.chevron) {
-    display: none;
-  }
+  /* "Olá, X" — só mostrar ícone */
+  .account-btn span:not(.chevron) { display: none; }
 }
 </style>
