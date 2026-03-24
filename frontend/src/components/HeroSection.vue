@@ -118,9 +118,9 @@ export default {
   inset: 0;
   background: linear-gradient(
     160deg,
-    rgba(233, 30, 123, 0.55) 0%,
-    rgba(120, 10, 60, 0.45) 50%,
-    rgba(252, 228, 236, 0.35) 100%
+    rgba(139, 74, 68, 0.65) 0%,
+    rgba(196, 115, 106, 0.50) 50%,
+    rgba(196, 149, 106, 0.35) 100%
   );
   z-index: 1;
 }

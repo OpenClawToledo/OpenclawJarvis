@@ -2,8 +2,7 @@
   <header class="header">
     <div class="container header-inner">
       <a href="#" class="logo">
-        <span class="logo-icon">🧶</span>
-        <span class="logo-text">Fios MJ</span>
+        <img src="/img/logo-fiosmj.jpg" alt="Fios MJ — Artes em Crochê" class="logo-img" />
       </a>
       <nav class="nav" :class="{ open: menuOpen }">
         <a href="#produtos" @click="menuOpen = false">Produtos</a>
@@ -102,9 +101,10 @@ export default {
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 20px rgba(233, 30, 123, 0.1);
+  background: rgba(253, 248, 242, 0.96);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 20px rgba(196, 115, 106, 0.12);
+  border-bottom: 1px solid rgba(232, 213, 190, 0.5);
 }
 
 .header-inner {
@@ -117,15 +117,19 @@ export default {
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--pink-primary);
 }
 
-.logo-icon {
-  font-size: 2rem;
+.logo-img {
+  height: 52px;
+  width: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(196,115,106,0.25);
+  transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.06);
 }
 
 .nav {
