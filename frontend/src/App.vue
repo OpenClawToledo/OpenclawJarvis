@@ -1,5 +1,6 @@
 <template>
   <div id="fiosmj-app">
+    <VisitCounter />
 
     <!-- ─── PRODUCT PAGE ─── -->
     <template v-if="currentView.name === 'product' && currentProduct">
@@ -132,6 +133,7 @@ import CustomerRanking from './components/CustomerRanking.vue'
 import ProductPage from './components/ProductPage.vue'
 import BlogSection from './components/BlogSection.vue'
 import BlogPost from './components/BlogPost.vue'
+import VisitCounter from './components/VisitCounter.vue'
 import BrandsSection from './components/BrandsSection.vue'
 import { useAuth } from './store/auth.js'
 
@@ -156,6 +158,7 @@ export default {
     ProductPage,
     BlogSection,
     BlogPost,
+    VisitCounter,
     BrandsSection
   },
   setup() {
