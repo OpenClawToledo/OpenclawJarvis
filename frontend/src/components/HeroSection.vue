@@ -7,16 +7,19 @@
       <div class="bg-col col-1">
         <div class="bg-tile" :style="{ backgroundImage: `url(${imgs[0]})` }"></div>
         <div class="bg-tile" :style="{ backgroundImage: `url(${imgs[3]})` }"></div>
+        <div class="bg-tile" :style="{ backgroundImage: `url(${imgs[0]})` }"></div>
       </div>
       <!-- Coluna 2 -->
       <div class="bg-col col-2">
         <div class="bg-tile" :style="{ backgroundImage: `url(${imgs[1]})` }"></div>
         <div class="bg-tile" :style="{ backgroundImage: `url(${imgs[4]})` }"></div>
+        <div class="bg-tile" :style="{ backgroundImage: `url(${imgs[1]})` }"></div>
       </div>
       <!-- Coluna 3 -->
       <div class="bg-col col-3">
         <div class="bg-tile" :style="{ backgroundImage: `url(${imgs[2]})` }"></div>
         <div class="bg-tile" :style="{ backgroundImage: `url(${imgs[5]})` }"></div>
+        <div class="bg-tile" :style="{ backgroundImage: `url(${imgs[2]})` }"></div>
       </div>
       <!-- Overlay vintage -->
       <div class="vintage-overlay"></div>
@@ -92,6 +95,7 @@ export default {
   flex-direction: column;
   gap: 0;
   overflow: hidden;
+  background-color: #8B4A44;
 }
 
 /* Cada coluna desliza a velocidade ligeiramente diferente */
@@ -100,14 +104,15 @@ export default {
 .col-3 { animation: drift-up   26s linear infinite; }
 
 .bg-tile {
-  flex: 1;
+  flex: none;
   background-size: cover;
   background-position: center;
-  min-height: 50vh;
+  height: 50vh;
   /* Ken Burns suave */
   animation: ken-burns 10s ease-in-out infinite alternate;
   /* Filtro vintage: sépia + desfoque */
   filter: sepia(0.55) blur(4px) brightness(0.75) saturate(0.7);
+  background-color: #8B4A44; /* fallback se imagem não carrega */
 }
 
 .bg-col:nth-child(2) .bg-tile { animation-delay: -3s; }
