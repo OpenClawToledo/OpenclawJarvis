@@ -14,6 +14,21 @@
         </a>
       </nav>
 
+      <!-- Account button -->
+      <div class="account-wrap" v-if="isLoggedIn" ref="accountRef">
+        <button class="account-btn" @click="dropdownOpen = !dropdownOpen">
+          👤 Olá, {{ firstName }}
+          <span class="chevron">▾</span>
+        </button>
+        <div class="dropdown" v-if="dropdownOpen" @click.stop>
+          <button class="dropdown-item" @click="openOrders">📦 Meus Pedidos</button>
+          <button class="dropdown-item" @click="handleLogout">🚪 Sair</button>
+        </div>
+      </div>
+      <button v-else class="account-btn" @click="$emit('open-auth')">
+        👤 Entrar
+      </button>
+
       <!-- Cart button -->
       <button class="cart-btn" @click="$emit('open-cart')" aria-label="Abrir carrinho">
         🛒
@@ -29,16 +44,44 @@
 
 <script>
 import { useCart } from '../store/cart.js'
+import { useAuth } from '../store/auth.js'
+import { computed } from 'vue'
 
 export default {
   name: 'AppHeader',
-  emits: ['open-cart'],
+  emits: ['open-cart', 'open-auth', 'open-orders'],
   setup() {
     const { count } = useCart()
-    return { cartCount: count }
+    const { customer, isLoggedIn, logout } = useAuth()
+    const firstName = computed(() => customer.customer?.name?.split(' ')[0] || '')
+    return { cartCount: count, customer, isLoggedIn, logout, firstName }
   },
   data() {
-    return { menuOpen: false }
+    return {
+      menuOpen: false,
+      dropdownOpen: false
+    }
+  },
+  mounted() {
+    document.addEventListener('click', this.closeDropdown)
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.closeDropdown)
+  },
+  methods: {
+    closeDropdown(e) {
+      if (this.$refs.accountRef && !this.$refs.accountRef.contains(e.target)) {
+        this.dropdownOpen = false
+      }
+    },
+    handleLogout() {
+      this.logout()
+      this.dropdownOpen = false
+    },
+    openOrders() {
+      this.dropdownOpen = false
+      this.$emit('open-orders')
+    }
   }
 }
 </script>
@@ -96,6 +139,68 @@ export default {
 .nav-instagram {
   color: var(--pink-primary) !important;
   font-weight: 600 !important;
+}
+
+/* Account */
+.account-wrap {
+  position: relative;
+}
+
+.account-btn {
+  background: none;
+  border: 2px solid var(--pink-primary);
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--pink-primary);
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.account-btn:hover {
+  background: var(--pink-primary);
+  color: white;
+}
+
+.chevron {
+  font-size: 0.75rem;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  min-width: 160px;
+  overflow: hidden;
+  z-index: 200;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+.dropdown-item:hover {
+  background: #fff5fb;
+  color: #e91e7b;
 }
 
 /* Cart button */
@@ -189,6 +294,10 @@ export default {
 
   .nav a {
     font-size: 1.1rem;
+  }
+
+  .account-btn span:not(.chevron) {
+    display: none;
   }
 }
 </style>

@@ -25,6 +25,7 @@ public class CheckoutRequest {
         private String productName;
         private Double price;
         private Integer quantity;
+        private String selectedSize;
 
         public CheckoutItem() {}
 
@@ -39,6 +40,9 @@ public class CheckoutRequest {
 
         public Integer getQuantity() { return quantity; }
         public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
+        public String getSelectedSize() { return selectedSize; }
+        public void setSelectedSize(String selectedSize) { this.selectedSize = selectedSize; }
     }
 
     public static class PayerInfo {

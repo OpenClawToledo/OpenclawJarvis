@@ -1,6 +1,10 @@
 <template>
   <div id="fiosmj-app">
-    <AppHeader @open-cart="cartOpen = true" />
+    <AppHeader
+      @open-cart="cartOpen = true"
+      @open-auth="authOpen = true"
+      @open-orders="ordersOpen = true"
+    />
     <HeroSection />
     <ProductGrid :products="products" />
     <HowToOrder />
@@ -20,6 +24,19 @@
       v-if="checkoutOpen"
       @close="checkoutOpen = false"
     />
+
+    <!-- Auth Modal -->
+    <AuthModal
+      v-if="authOpen"
+      @close="authOpen = false"
+      @logged-in="authOpen = false"
+    />
+
+    <!-- Order History -->
+    <OrderHistory
+      v-if="ordersOpen"
+      @close="ordersOpen = false"
+    />
   </div>
 </template>
 
@@ -33,6 +50,9 @@ import AppFooter from './components/AppFooter.vue'
 import WhatsAppFloat from './components/WhatsAppFloat.vue'
 import CartDrawer from './components/CartDrawer.vue'
 import CheckoutForm from './components/CheckoutForm.vue'
+import AuthModal from './components/AuthModal.vue'
+import OrderHistory from './components/OrderHistory.vue'
+import { useAuth } from './store/auth.js'
 
 export default {
   name: 'App',
@@ -45,13 +65,21 @@ export default {
     AppFooter,
     WhatsAppFloat,
     CartDrawer,
-    CheckoutForm
+    CheckoutForm,
+    AuthModal,
+    OrderHistory
+  },
+  setup() {
+    const { loadMe } = useAuth()
+    return { loadMe }
   },
   data() {
     return {
       products: [],
       cartOpen: false,
-      checkoutOpen: false
+      checkoutOpen: false,
+      authOpen: false,
+      ordersOpen: false
     }
   },
   methods: {
@@ -61,11 +89,13 @@ export default {
     }
   },
   async mounted() {
+    // Restore auth session if token exists
+    await this.loadMe()
+
     try {
       const res = await fetch('/api/products')
       this.products = await res.json()
     } catch (e) {
-      // Fallback products if API is not available
       this.products = [
         {
           id: 1,

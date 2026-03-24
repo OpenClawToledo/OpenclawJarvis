@@ -131,13 +131,15 @@
 
 <script>
 import { useCart } from '../store/cart.js'
+import { useAuth } from '../store/auth.js'
 
 export default {
   name: 'CheckoutForm',
   emits: ['close'],
   setup() {
     const { items, total, clearCart } = useCart()
-    return { items, total, clearCart }
+    const { customer, isLoggedIn } = useAuth()
+    return { items, total, clearCart, authCustomer: customer, isLoggedIn }
   },
   data() {
     return {
@@ -162,6 +164,15 @@ export default {
         'MA','MG','MS','MT','PA','PB','PE','PI','PR',
         'RJ','RN','RO','RR','RS','SC','SE','SP','TO'
       ]
+    }
+  },
+  mounted() {
+    // Prefill from logged-in customer
+    if (this.isLoggedIn && this.authCustomer.customer) {
+      const c = this.authCustomer.customer
+      if (c.name) this.form.name = c.name
+      if (c.email) this.form.email = c.email
+      if (c.phone) this.form.phone = c.phone
     }
   },
   methods: {
@@ -225,9 +236,13 @@ export default {
           }
         }
 
+        const token = localStorage.getItem('fiosmj_token')
+        const headers = { 'Content-Type': 'application/json' }
+        if (token) headers['Authorization'] = `Bearer ${token}`
+
         const res = await fetch('/api/checkout/preference', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify(body)
         })
 
@@ -238,6 +253,37 @@ export default {
 
         const data = await res.json()
         if (data.init_point) {
+          // If logged in, also register the order explicitly via orders API
+          if (token) {
+            try {
+              const orderPayload = {
+                preferenceId: data.preference_id,
+                initPoint: data.init_point,
+                name: this.form.name,
+                email: this.form.email,
+                phone: this.form.phone,
+                cep: this.form.cep,
+                street: this.form.street,
+                number: this.form.number,
+                complement: this.form.complement,
+                neighborhood: this.form.neighborhood,
+                city: this.form.city,
+                state: this.form.state,
+                totalAmount: this.total,
+                items: this.items.map(i => ({
+                  productName: i.product.name + (i.selectedSize ? ` (${i.selectedSize.size})` : ''),
+                  price: i.price,
+                  quantity: i.quantity,
+                  selectedSize: i.selectedSize?.size || null
+                }))
+              }
+              await fetch('/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(orderPayload)
+              })
+            } catch {}
+          }
           this.clearCart()
           window.location.href = data.init_point
         } else {
