@@ -53,9 +53,9 @@ export default {
 <style scoped>
 .visit-counter {
   position: fixed;
-  top: 14px;
+  bottom: 90px;
   right: 16px;
-  z-index: 1000;
+  z-index: 996;
   background: rgba(255,255,255,0.92);
   border: 1.5px solid #e91e7b33;
   border-radius: 20px;
@@ -68,6 +68,12 @@ export default {
   font-family: 'Courier New', monospace;
   pointer-events: none;
   user-select: none;
+  animation: float-counter 3s ease-in-out infinite;
+}
+
+@keyframes float-counter {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
 }
 
 .counter-icon {
@@ -98,7 +104,7 @@ export default {
 
 @media (max-width: 600px) {
   .visit-counter {
-    top: 10px;
+    bottom: 80px;
     right: 10px;
     padding: 4px 9px 4px 7px;
   }

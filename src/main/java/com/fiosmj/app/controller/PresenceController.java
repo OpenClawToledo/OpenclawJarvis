@@ -59,7 +59,7 @@ public class PresenceController {
                 m.put("sessionId", v.sessionId);
                 m.put("initial", v.displayName != null && !v.displayName.isBlank()
                     ? String.valueOf(v.displayName.trim().charAt(0)).toUpperCase()
-                    : "?");
+                    : "👀");
                 m.put("label", v.displayName != null && !v.displayName.isBlank()
                     ? maskName(v.displayName) + " está a ver"
                     : "Alguém está a ver");
