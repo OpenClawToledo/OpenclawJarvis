@@ -49,7 +49,7 @@
           <button class="btn-back-home" @click="goHome">← Voltar à Loja</button>
           <h1 class="page-title">📝 Blog & Tutoriais</h1>
           <BlogSection
-            @open-post="slug => { window.location.hash = '#/blog/' + slug }"
+            @open-post="openBlogPost"
             @open-blog-list="goToBlog"
           />
         </div>
@@ -72,7 +72,7 @@
       <HowToOrder />
       <BrandsSection />
       <BlogSection
-        @open-post="slug => { window.location.hash = '#/blog/' + slug }"
+        @open-post="openBlogPost"
         @open-blog-list="goToBlog"
       />
       <InstagramCarousel />
@@ -200,6 +200,9 @@ export default {
       }
       this.currentView = { name: 'home' }
       this.currentProduct = null
+    },
+    openBlogPost(slug) {
+      window.location.hash = '#/blog/' + slug
     },
     openProduct(product) {
       window.location.hash = `#/produto/${product.id}`
