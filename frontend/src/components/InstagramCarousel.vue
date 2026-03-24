@@ -32,7 +32,7 @@
         >
           <a :href="post.postUrl || 'https://instagram.com/fiosmjcroche'" target="_blank" rel="noopener" class="ig-card">
             <div class="ig-img-wrap">
-              <img :src="post.imageUrl" :alt="post.caption" loading="lazy" />
+              <img :src="proxyUrl(post.imageUrl)" :alt="post.caption" loading="lazy" />
               <div class="ig-overlay">
                 <span class="ig-view">Ver no Instagram ↗</span>
               </div>
@@ -88,7 +88,14 @@ export default {
   },
   methods: {
     next() { this.current = (this.current + 1) % this.posts.length },
-    prev() { this.current = (this.current - 1 + this.posts.length) % this.posts.length }
+    prev() { this.current = (this.current - 1 + this.posts.length) % this.posts.length },
+    proxyUrl(url) {
+      if (!url) return ''
+      // Se já é URL local (/uploads/...) ou URL do nosso domínio, usa directo
+      if (url.startsWith('/') || url.startsWith('https://fiosmj.com')) return url
+      // Caso contrário, passa pelo proxy do servidor para evitar bloqueio do Instagram
+      return '/api/img/proxy?url=' + encodeURIComponent(url)
+    }
   }
 }
 </script>
