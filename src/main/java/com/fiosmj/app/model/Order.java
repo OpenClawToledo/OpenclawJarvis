@@ -108,4 +108,10 @@ public class Order {
 
     public List<OrderItem> getItems() { return items; }
     public void setItems(List<OrderItem> items) { this.items = items; }
+
+    /** Resumo dos itens para exibição no ranking */
+    public String getItemsSummary() {
+        if (items == null || items.isEmpty()) return "";
+        return items.get(0).getProductName();
+    }
 }

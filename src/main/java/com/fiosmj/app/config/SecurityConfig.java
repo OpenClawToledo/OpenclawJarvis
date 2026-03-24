@@ -30,7 +30,8 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/auth/**",
                     "/api/products/**",
-                    "/api/checkout/**"
+                    "/api/checkout/**",
+                    "/api/social/**"
                 ).permitAll()
                 // Permit all static resources and page routes
                 .requestMatchers(

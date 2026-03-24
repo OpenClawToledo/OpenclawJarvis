@@ -8,6 +8,10 @@
     <HeroSection />
     <ProductGrid :products="products" />
     <HowToOrder />
+    <InstagramCarousel />
+    <TestimonialsSection />
+    <GiftShowcase />
+    <CustomerRanking @open-auth="authOpen = true" />
     <AboutSection />
     <AppFooter />
     <WhatsAppFloat />
@@ -52,6 +56,10 @@ import CartDrawer from './components/CartDrawer.vue'
 import CheckoutForm from './components/CheckoutForm.vue'
 import AuthModal from './components/AuthModal.vue'
 import OrderHistory from './components/OrderHistory.vue'
+import InstagramCarousel from './components/InstagramCarousel.vue'
+import TestimonialsSection from './components/TestimonialsSection.vue'
+import GiftShowcase from './components/GiftShowcase.vue'
+import CustomerRanking from './components/CustomerRanking.vue'
 import { useAuth } from './store/auth.js'
 
 export default {
@@ -67,7 +75,11 @@ export default {
     CartDrawer,
     CheckoutForm,
     AuthModal,
-    OrderHistory
+    OrderHistory,
+    InstagramCarousel,
+    TestimonialsSection,
+    GiftShowcase,
+    CustomerRanking
   },
   setup() {
     const { loadMe } = useAuth()

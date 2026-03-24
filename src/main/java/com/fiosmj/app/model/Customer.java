@@ -18,6 +18,7 @@ public class Customer {
     private String email;
 
     private String phone;
+    private String city;
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
@@ -49,6 +50,8 @@ public class Customer {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
 
     public String getPasswordHash() { return passwordHash; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
