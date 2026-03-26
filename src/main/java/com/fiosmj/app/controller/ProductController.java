@@ -54,16 +54,54 @@ public class ProductController {
             10
         ));
 
-        // 4. Produto Teste 🧪
+
+
+        // 5. Bolsa de Anéis Rose 🌸
         products.add(new Product(
-            4L,
-            "Produto Teste 🧪",
-            "Produto de teste para validar o fluxo de pagamento. Valor simbólico de 1€ (R$6,10). Pode remover após os testes!",
-            6.10,
-            "/img/caneta.jpg",
-            "Teste",
+            5L,
+            "Bolsa de Anéis Rose 🌸",
+            "Bolsa artesanal de crochê em técnica de anéis, feita com fio de polipropileno na cor rose/terracota. Forro interno de cetim rose metálico e alça hexagonal em resina âmbar. Peça única, feita à mão com muito carinho. Preço a partir de R$250 — varia conforme tamanho e modelo. Sob encomenda.",
+            250.0,
+            "/uploads/bolsas/bolsa-aneis-rose.jpg",
+            "Bolsas",
             null,
-            99
+            1
+        ));
+
+        // 6. Amigurumi Cachorrinho 🐶
+        products.add(new Product(
+            6L,
+            "Amigurumi Cachorrinho 🐶",
+            "Amigurumi cachorrinho feito à mão com fio de algodão, acabamento delicado, olhinhos bordados e coleirinha vermelha. Uma peça única e cheia de personalidade! Preço a partir de R$120 — varia conforme tamanho e modelo. Sob encomenda.",
+            120.0,
+            "/uploads/amigurumi/amigurumi-cachorro-bege.jpg",
+            "Amigurumi",
+            null,
+            1
+        ));
+
+        // 8. Bolsa Cordão Rayontex Bege 🧵
+        products.add(new Product(
+            8L,
+            "Bolsa Cordão Bege 🧵",
+            "Bolsa artesanal feita com cordão Rayontex Bege 1200TEX 100% polipropileno — material resistente e de acabamento premium. Peça estruturada, feita à mão com muito cuidado. Preço a partir de R$250 — varia conforme tamanho e modelo. Sob encomenda.",
+            250.0,
+            "/uploads/bolsas/cordao-rayontex-bege.jpg",
+            "Bolsas",
+            null,
+            1
+        ));
+
+        // 7. Amigurumi Boneca 🎀
+        products.add(new Product(
+            7L,
+            "Amigurumi Boneca 🎀",
+            "Boneca amigurumi artesanal com cabelo cacheado e vestidinho colorido feito à mão. Disponível em diversas cores e modelos. Peça perfeita para presentear! Preço a partir de R$120 — varia conforme tamanho e modelo. Sob encomenda.",
+            120.0,
+            "/uploads/amigurumi/amigurumi-bonecas.jpg",
+            "Amigurumi",
+            null,
+            1
         ));
     }
 
