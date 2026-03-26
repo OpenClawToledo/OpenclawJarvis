@@ -104,13 +104,13 @@ public class ProductController {
             1
         ));
 
-        // 9. Cropped de Crochê 🧶
+        // 9. Cropped Halter Copa 2026 🇧🇷
         products.add(new Product(
             9L,
-            "Cropped de Crochê 🧶",
-            "Cropped artesanal feito à mão com fio de qualidade. Peça única, cheia de estilo e personalidade! Disponível nos tamanhos P, M e G.",
+            "Cropped Halter Copa 2026 🇧🇷",
+            "Cropped de crochê artesanal nas cores do Brasil — amarelo com detalhes em verde e patch da bandeirinha 🇧🇷. Alças cruzadas nas costas, feito à mão com muito carinho. Perfeito para torcer com estilo na Copa 2026! Disponível nos tamanhos P, M e G.",
             100.0,
-            "/uploads/roupas/cropped-novo.jpg",
+            "/uploads/roupas/cropped-brasil-frente.jpg",
             "Roupas",
             List.of(
                 Map.of("size", "P", "price", 100.0),
