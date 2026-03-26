@@ -103,6 +103,22 @@ public class ProductController {
             null,
             1
         ));
+
+        // 9. Cropped de Crochê 🧶
+        products.add(new Product(
+            9L,
+            "Cropped de Crochê 🧶",
+            "Cropped artesanal feito à mão com fio de qualidade. Peça única, cheia de estilo e personalidade! Disponível nos tamanhos P, M e G.",
+            100.0,
+            "/uploads/roupas/cropped-novo.jpg",
+            "Roupas",
+            List.of(
+                Map.of("size", "P", "price", 100.0),
+                Map.of("size", "M", "price", 120.0),
+                Map.of("size", "G", "price", 140.0)
+            ),
+            3
+        ));
     }
 
     @GetMapping("/products")
