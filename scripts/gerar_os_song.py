@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Toledo Digital — Ordem de Serviço Nº 001 — Família Song"""
+"""SolutionSoftware — Ordem de Serviço Nº 001 — Família Song"""
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -68,7 +68,7 @@ def num_pag(canvas, doc):
     canvas.setFont('Helvetica', 7.5)
     canvas.setFillColor(colors.grey)
     canvas.drawString(MARGEM, 1.1*cm,
-        "Toledo Digital · Luís Toledo · +351 931 120 429 · toledothelast@gmail.com")
+        "SolutionSoftware · Luís Toledo · +351 931 120 429 · toledothelast@gmail.com")
     canvas.drawRightString(W - MARGEM, 1.1*cm, f"OS Nº 001 · Página {doc.page}")
     canvas.restoreState()
 
@@ -77,7 +77,7 @@ def gerar():
     doc = SimpleDocTemplate(OUTPUT, pagesize=A4,
         leftMargin=MARGEM, rightMargin=MARGEM,
         topMargin=2*cm, bottomMargin=2*cm,
-        title="OS-001 Toledo Digital — Família Song")
+        title="OS-001 SolutionSoftware — Família Song")
 
     story = []
 
@@ -121,7 +121,7 @@ def gerar():
     story.append(Paragraph("1. IDENTIFICAÇÃO DAS PARTES", st['secao']))
     partes = [
         ['', 'PRESTADOR DE SERVIÇOS', 'CLIENTE'],
-        ['Nome', 'Luís Augusto Soares de Toledo\nToledo Digital', 'Jiaxin Song\n(Filha do Sr. Song)'],
+        ['Nome', 'Luís Augusto Soares de Toledo\nSolutionSoftware', 'Jiaxin Song\n(Filha do Sr. Song)'],
         ['NIF', '_________________', '_________________'],
         ['Morada', 'Leça da Palmeira, Porto, Portugal', '_________________________________'],
         ['Telefone', '+351 931 120 429', '+351 966 599 195'],
@@ -288,7 +288,7 @@ def gerar():
     assin = [
         [Paragraph('PRESTADOR DE SERVIÇOS', st['centro']),
          Paragraph('CLIENTE', st['centro'])],
-        [Paragraph('Luís Augusto Soares de Toledo\nToledo Digital', st['centro']),
+        [Paragraph('Luís Augusto Soares de Toledo\nSolutionSoftware', st['centro']),
          Paragraph('Jiaxin Song', st['centro'])],
         ['', ''],
         [Paragraph('_________________________________', st['centro']),

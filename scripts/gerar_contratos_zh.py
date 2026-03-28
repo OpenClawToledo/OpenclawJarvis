@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Toledo Digital — 合同文件 (中文版) — Song 家族"""
+"""SolutionSoftware — 合同文件 (中文版) — Song 家族"""
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -29,7 +29,7 @@ ANO = datetime.date.today().year
 
 PRESTADOR = {
     'nome': 'Luís Augusto Soares de Toledo',
-    'empresa': 'Toledo Digital',
+    'empresa': 'SolutionSoftware',
     'morada': 'Leça da Palmeira, Porto, 葡萄牙',
     'tel': '+351 931 120 429',
     'email': 'toledothelast@gmail.com',
@@ -117,13 +117,13 @@ def num_pag(canvas, doc):
     canvas.setFont(ZH, 7.5)
     canvas.setFillColor(colors.grey)
     canvas.drawString(MARGEM, 1.1*cm,
-        f"Toledo Digital · {PRESTADOR['email']} · {PRESTADOR['tel']}")
+        f"SolutionSoftware · {PRESTADOR['email']} · {PRESTADOR['tel']}")
     canvas.drawRightString(W - MARGEM, 1.1*cm, f"第 {doc.page} 页")
     canvas.restoreState()
 
 def doc1(s):
     elems = []
-    elems += cab_doc(s, "1", "服务合同", "Toledo Digital · 网站开发与数字应用")
+    elems += cab_doc(s, "1", "服务合同", "SolutionSoftware · 网站开发与数字应用")
 
     elems.append(Paragraph("双方信息", s['secao']))
     partes = [
@@ -366,7 +366,7 @@ def gerar():
     doc = SimpleDocTemplate(OUTPUT, pagesize=A4,
         leftMargin=MARGEM, rightMargin=MARGEM,
         topMargin=2*cm, bottomMargin=2*cm,
-        title="Toledo Digital — 合同文件（中文版）")
+        title="SolutionSoftware — 合同文件（中文版）")
 
     story = []
 
@@ -406,7 +406,7 @@ def gerar():
     story.append(ti)
     story.append(Spacer(1, 2*cm))
     story.append(Paragraph(
-        f"版本 1.0 · {HOJE} · 仅供内部使用 — Toledo Digital",
+        f"版本 1.0 · {HOJE} · 仅供内部使用 — SolutionSoftware",
         ParagraphStyle('r', fontSize=9, textColor=colors.grey, alignment=TA_CENTER, fontName=ZH)))
     story.append(PageBreak())
 

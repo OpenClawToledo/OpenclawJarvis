@@ -1,6 +1,6 @@
 #!/bin/bash
 # ════════════════════════════════════════════════════════════════════
-#  JARVIS BOOTSTRAP — Toledo Digital
+#  JARVIS BOOTSTRAP — SolutionSoftware
 #  Recupera o ambiente completo numa máquina nova com um comando:
 #
 #    curl -sSL https://raw.githubusercontent.com/OpenClawToledo/OpenclawJarvis/main/bootstrap.sh | bash
@@ -16,7 +16,7 @@ OPENCLAW_DIR="/data/.openclaw"
 
 echo ""
 echo "╔══════════════════════════════════════════╗"
-echo "║   JARVIS BOOTSTRAP — Toledo Digital      ║"
+echo "║   JARVIS BOOTSTRAP — SolutionSoftware      ║"
 echo "╚══════════════════════════════════════════╝"
 echo ""
 

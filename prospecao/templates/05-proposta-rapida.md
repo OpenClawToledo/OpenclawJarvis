@@ -9,7 +9,7 @@
 
 > [Nome], tal como combinámos aqui está o resumo 📋
 >
-> *[Nome do negócio] — Proposta Toledo Digital*
+> *[Nome do negócio] — Proposta SolutionSoftware*
 >
 > ✅ O que inclui:
 > • Site profissional [X páginas]
@@ -25,13 +25,13 @@
 > Para avançar é só confirmar e combinamos a recolha de informações.
 >
 > Qualquer dúvida estou aqui! 🙂
-> Luís — Toledo Digital
+> Luís — SolutionSoftware
 
 ---
 
 ## EMAIL (mais formal)
 
-**Assunto:** Proposta Toledo Digital — [nome do negócio]
+**Assunto:** Proposta SolutionSoftware — [nome do negócio]
 
 > Olá [Nome],
 >
@@ -48,7 +48,7 @@
 >
 > Com os melhores cumprimentos,
 > Luís Toledo
-> Toledo Digital · +351 931 120 429
+> SolutionSoftware · +351 931 120 429
 
 ---
 

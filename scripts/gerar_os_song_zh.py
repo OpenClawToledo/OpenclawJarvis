@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Toledo Digital — 服务单 Nº 001 — Song 家族 (中文版)"""
+"""SolutionSoftware — 服务单 Nº 001 — Song 家族 (中文版)"""
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -70,7 +70,7 @@ def num_pag(canvas, doc):
     canvas.setFont(FONTE_ZH, 7.5)
     canvas.setFillColor(colors.grey)
     canvas.drawString(MARGEM, 1.1*cm,
-        "Toledo Digital · Luís Toledo · +351 931 120 429 · toledothelast@gmail.com")
+        "SolutionSoftware · Luís Toledo · +351 931 120 429 · toledothelast@gmail.com")
     canvas.drawRightString(W - MARGEM, 1.1*cm, f"服务单 Nº 001 · 第 {doc.page} 页")
     canvas.restoreState()
 
@@ -79,7 +79,7 @@ def gerar():
     doc = SimpleDocTemplate(OUTPUT, pagesize=A4,
         leftMargin=MARGEM, rightMargin=MARGEM,
         topMargin=2*cm, bottomMargin=2*cm,
-        title="服务单 OS-001 Toledo Digital — Song 家族")
+        title="服务单 OS-001 SolutionSoftware — Song 家族")
 
     story = []
     hoje = datetime.date.today().strftime("%Y年%m月%d日")
@@ -122,7 +122,7 @@ def gerar():
     story.append(Paragraph("1. 双方信息", st['secao']))
     partes = [
         ['', '服务提供方', '客户'],
-        ['姓名', 'Luís Augusto Soares de Toledo\nToledo Digital', 'Song 小姐 (Song 先生之女)'],
+        ['姓名', 'Luís Augusto Soares de Toledo\nSolutionSoftware', 'Song 小姐 (Song 先生之女)'],
         ['税号 (NIF)', '_________________', '_________________'],
         ['地址', 'Leça da Palmeira, Porto, 葡萄牙', '_________________________________'],
         ['电话', '+351 931 120 429', '+351 966 599 195'],
@@ -229,7 +229,7 @@ def gerar():
     # Caixa de destaque — razão do desconto
     desc_box = Table([[Paragraph(
         "🤝  友情说明\n\n"
-        "Toledo Digital 与 Song 先生相识已久，彼此建立了深厚的信任与友谊。"
+        "SolutionSoftware 与 Song 先生相识已久，彼此建立了深厚的信任与友谊。"
         "本次报价充分体现了这份情谊：餐厅二维码系统免费赠送，"
         "会计事务所网站以友情价交付。\n\n"
         "本服务单中记录的市场价格仅作为正式文件登记之用，"
@@ -320,7 +320,7 @@ def gerar():
 
     assin = [
         [Paragraph('服务提供方', st['centro']), Paragraph('客户', st['centro'])],
-        [Paragraph('Luís Augusto Soares de Toledo\nToledo Digital', st['centro']),
+        [Paragraph('Luís Augusto Soares de Toledo\nSolutionSoftware', st['centro']),
          Paragraph('Song 小姐', st['centro'])],
         ['', ''],
         [Paragraph('_________________________________', st['centro']),

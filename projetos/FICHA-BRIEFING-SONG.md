@@ -76,7 +76,7 @@ ________________________________________________
 
 ### Alergénios (obrigatório por lei)
 - Quem preenche os alergénios por prato? _____________
-- (Toledo Digital fornece a lista dos 14 alergénios)
+- (SolutionSoftware fornece a lista dos 14 alergénios)
 
 ### Domínio pretendido
 - Sugestão: _______________________.pt  /  .com
@@ -106,4 +106,4 @@ ___________________________________________________
 
 ---
 
-*Toledo Digital · +351 931 120 429 · toledothelast@gmail.com*
+*SolutionSoftware · +351 931 120 429 · toledothelast@gmail.com*

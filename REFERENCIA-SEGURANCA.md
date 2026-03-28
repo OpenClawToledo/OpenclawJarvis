@@ -7,7 +7,7 @@
 
 ## OWASP TOP 10 — O QUE É E COMO APLICAMOS
 
-O OWASP (Open Worldwide Application Security Project) publica anualmente as 10 vulnerabilidades mais críticas em software. Abaixo está o que cada uma significa e como a Toledo Digital a mitiga em todos os projetos.
+O OWASP (Open Worldwide Application Security Project) publica anualmente as 10 vulnerabilidades mais críticas em software. Abaixo está o que cada uma significa e como a SolutionSoftware a mitiga em todos os projetos.
 
 ---
 
@@ -207,4 +207,4 @@ if ($scheme != "https") {
 
 ---
 
-*Toledo Digital · Documento de uso interno · Atualizar após cada projeto*
+*SolutionSoftware · Documento de uso interno · Atualizar após cada projeto*

@@ -1,6 +1,6 @@
-# Jarvis — Toledo Digital
+# Jarvis — SolutionSoftware
 
-Ambiente completo do assistente Jarvis + apps Toledo Digital.
+Ambiente completo do assistente Jarvis + apps SolutionSoftware.
 
 ## Recuperação numa máquina nova
 
@@ -56,4 +56,4 @@ chmod +x /data/.openclaw/workspace/bootstrap.sh
 
 ## Contacto
 
-Toledo Digital · +351 931 120 429
+SolutionSoftware · +351 931 120 429

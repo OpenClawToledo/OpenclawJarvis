@@ -1,4 +1,4 @@
-package com.toledodigital.app.model;
+package com.solutionsoftware.app.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

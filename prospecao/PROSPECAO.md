@@ -190,4 +190,4 @@ NOVO → CONTACTADO → PROPOSTA → NEGOCIAÇÃO → FECHADO ✅
 
 ---
 
-*Toledo Digital · Luís Toledo · toledothelast@gmail.com · +351 931 120 429*
+*SolutionSoftware · Luís Toledo · toledothelast@gmail.com · +351 931 120 429*

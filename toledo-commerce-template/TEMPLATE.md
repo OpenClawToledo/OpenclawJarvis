@@ -1,12 +1,12 @@
 # Toledo Commerce Template
 > Base reutilizável para qualquer projeto de comércio digital
-> Toledo Digital — Jarvis executa, Toledo fecha.
+> SolutionSoftware — Jarvis executa, Toledo fecha.
 
 ---
 
 ## O que é
 
-O `fiosmj-app` é a base comprovada de todos os projetos de comércio da Toledo Digital.
+O `fiosmj-app` é a base comprovada de todos os projetos de comércio da SolutionSoftware.
 Contém: Spring Boot + Vue.js + SQLite + JWT + Cart + Checkout + Orders + Auth + Image Upload.
 
 Para cada novo cliente: **clone + configure + adicione módulos** conforme o nicho.

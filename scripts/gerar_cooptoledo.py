@@ -140,7 +140,7 @@ def gerar():
         "Cada família paga <b>R$468/mês</b> e recebe uma cesta completa com hortifruti, grãos "
         "e ≈10,5kg de carne bovina de qualidade. O equivalente no varejo custa <b>R$800–900/mês</b>, "
         "representando uma <b>economia de 45%</b>. A gestão é 100% digital, com plataforma web "
-        "desenvolvida internamente pela Toledo Digital, sem custo adicional.", s['corpo']))
+        "desenvolvida internamente pela SolutionSoftware, sem custo adicional.", s['corpo']))
 
     kpis2 = [['Indicador', 'Valor'],
              ['Famílias (fase piloto)', '20'],
@@ -276,7 +276,7 @@ def gerar():
     story.append(PageBreak())
     story += cab(s, "5", "PLATAFORMA DIGITAL", "Desenvolvida internamente — custo R$0")
     story.append(Paragraph(
-        "A Toledo Digital desenvolve e mantém a plataforma de gestão da CoopToledo. "
+        "A SolutionSoftware desenvolve e mantém a plataforma de gestão da CoopToledo. "
         "Por ser o próprio fundador o desenvolvedor, o custo é zero — uma vantagem "
         "competitiva única que nenhuma outra cooperativa local possui.", s['corpo']))
 
@@ -293,7 +293,7 @@ def gerar():
     story.append(Spacer(1,8))
     story.append(Paragraph(
         "Stack tecnológica: Spring Boot (backend) + interface web responsiva (mobile-first). "
-        "Hospedagem: VPS Hostinger (~R$50/mês, já partilhado com outros projetos Toledo Digital). "
+        "Hospedagem: VPS Hostinger (~R$50/mês, já partilhado com outros projetos SolutionSoftware). "
         "Pagamentos: integração Pix via API bancária (Sicoob ou Nubank PJ).", s['corpo']))
 
     # ── CRONOGRAMA ──

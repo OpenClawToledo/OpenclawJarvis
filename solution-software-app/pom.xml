@@ -9,10 +9,10 @@
         <version>3.2.3</version>
         <relativePath/>
     </parent>
-    <groupId>com.toledodigital</groupId>
-    <artifactId>toledo-digital-app</artifactId>
+    <groupId>com.solutionsoftware</groupId>
+    <artifactId>solution-software-app</artifactId>
     <version>1.0.0</version>
-    <name>toledo-digital-app</name>
+    <name>solution-software-app</name>
     <description>Toledo Digital — Site institucional + painel de projetos</description>
 
     <properties>

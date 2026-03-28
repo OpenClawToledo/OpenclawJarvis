@@ -1,5 +1,5 @@
 # Case Study — Fios MJ
-*Toledo Digital | 2025–2026*
+*SolutionSoftware | 2025–2026*
 
 ---
 
@@ -66,5 +66,5 @@ O dono foca no negócio. Nós tratamos do digital.
 
 ---
 
-*Toledo Digital — Presença digital que trabalha enquanto tu descansas.*
+*SolutionSoftware — Presença digital que trabalha enquanto tu descansas.*
 *Contacto: toledothelast@gmail.com*

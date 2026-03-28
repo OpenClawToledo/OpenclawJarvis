@@ -50,7 +50,7 @@ Por terem fechado em condições especiais, o 1º mês de gestão de marketing d
 - Plano de conteúdo inicial para redes sociais (posts, dicas, presença ativa)
 - Relatório de visibilidade no final do mês
 
-> Este serviço não faz parte do pacote padrão Toledo Digital — é um bónus por condições de fecho acordadas.
+> Este serviço não faz parte do pacote padrão SolutionSoftware — é um bónus por condições de fecho acordadas.
 
 ---
 
@@ -89,6 +89,6 @@ Inclui:
 
 ## 📞 CONTACTOS
 
-**Luís Toledo** — Toledo Digital
+**Luís Toledo** — SolutionSoftware
 WhatsApp: +351 931 120 429
 Email: toledothelast@gmail.com

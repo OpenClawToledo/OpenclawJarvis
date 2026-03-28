@@ -185,7 +185,7 @@ Cada novo projeto deve nascer já com:
 - [ ] Ficheiro `.env` separado por ambiente (dev / produção)
 - [ ] JWT secret gerado aleatoriamente (nunca reutilizar entre projetos)
 - [ ] Admin secret gerado aleatoriamente
-- [ ] Credenciais do cliente em posse do cliente (não só da Toledo Digital)
+- [ ] Credenciais do cliente em posse do cliente (não só da SolutionSoftware)
 - [ ] robots.txt com admin bloqueado desde o início
 - [ ] HTTPS ativo antes do primeiro deploy público
 - [ ] Checklist de entrega preenchida antes de cobrar
@@ -205,4 +205,4 @@ Cada novo projeto deve nascer já com:
 
 ---
 
-*Toledo Digital · Este documento é confidencial · Atualizar após cada projeto entregue*
+*SolutionSoftware · Este documento é confidencial · Atualizar após cada projeto entregue*

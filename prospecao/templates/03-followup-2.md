@@ -16,7 +16,7 @@
 > Se um dia quiserem algo parecido para o [nome do negócio], é só avisar.
 > Boa sorte com o negócio! 😊
 >
-> Luís — Toledo Digital
+> Luís — SolutionSoftware
 
 ---
 

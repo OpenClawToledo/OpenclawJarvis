@@ -1,4 +1,4 @@
-# Pitch 30 Segundos — Toledo Digital
+# Pitch 30 Segundos — SolutionSoftware
 
 ---
 

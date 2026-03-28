@@ -1,7 +1,7 @@
 # PROPOSTA — Loja Online + Portal B2B
 ## Carnes São Martinho
 **Para:** geral@carnessaomartinho.pt
-**De:** Luís Toledo — Toledo Digital
+**De:** Luís Toledo — SolutionSoftware
 **Data:** 26 de março de 2026 | **Validade:** 30 dias
 
 ---

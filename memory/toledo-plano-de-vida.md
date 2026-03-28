@@ -140,7 +140,7 @@ Ver /data/.openclaw/workspace/agencia/AGENCIA.md (bebê, frango, oficina)
 
 ### 🔧 Toledo Soluções (Brasil)
 - Serralheria, elétrica, drone, mídia digital — serviços locais
-- Site = portfólio digital da Toledo Digital + negócio real gerando renda
+- Site = portfólio digital da SolutionSoftware + negócio real gerando renda
 - Checklist: [ ] Criar site [ ] Google Meu Negócio [ ] Primeiros clientes
 
 ---

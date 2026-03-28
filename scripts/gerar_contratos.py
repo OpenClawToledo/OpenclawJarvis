@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Toledo Digital — Gerador de Documentos Contratuais
+SolutionSoftware — Gerador de Documentos Contratuais
 Gera 3 documentos num único PDF:
   1. Contrato de Prestação de Serviços
   2. Declaração de Âmbito (SOW)
@@ -27,7 +27,7 @@ PRESTADOR = {
     "morada": "Leça da Palmeira, Porto, Portugal",
     "telefone": "+351 931 120 429",
     "email": "toledothelast@gmail.com",
-    "designacao": "Toledo Digital",
+    "designacao": "SolutionSoftware",
 }
 
 DATA_HOJE = datetime.date.today().strftime("%d de %B de %Y").replace(
@@ -145,7 +145,7 @@ def bloco_assinaturas(s):
 def doc1_contrato(s):
     elems = []
     elems += cabecalho_doc(s, "1", "CONTRATO DE PRESTAÇÃO DE SERVIÇOS",
-        "Toledo Digital · Desenvolvimento Web & Aplicações · toledothelast@gmail.com")
+        "SolutionSoftware · Desenvolvimento Web & Aplicações · toledothelast@gmail.com")
 
     elems.append(Paragraph("IDENTIFICAÇÃO DAS PARTES", s['secao']))
     elems.append(tabela_partes(s,
@@ -459,7 +459,7 @@ class NumeracaoPaginas:
         canvas.setFont('Helvetica', 8)
         canvas.setFillColor(colors.grey)
         canvas.drawString(MARGEM, 1.2*cm,
-            f"Toledo Digital · {PRESTADOR['email']} · {PRESTADOR['telefone']}")
+            f"SolutionSoftware · {PRESTADOR['email']} · {PRESTADOR['telefone']}")
         canvas.drawRightString(W - MARGEM, 1.2*cm, f"Página {doc.page}")
         canvas.restoreState()
 
@@ -469,8 +469,8 @@ def gerar():
     doc = SimpleDocTemplate(OUTPUT, pagesize=A4,
         leftMargin=MARGEM, rightMargin=MARGEM,
         topMargin=2*cm, bottomMargin=2*cm,
-        title="Toledo Digital — Contratos",
-        author="Toledo Digital",
+        title="SolutionSoftware — Contratos",
+        author="SolutionSoftware",
         subject="Documentos Contratuais")
 
     numeracao = NumeracaoPaginas()
@@ -517,7 +517,7 @@ def gerar():
     story.append(t)
     story.append(Spacer(1, 2*cm))
     story.append(Paragraph(
-        f"Versão 1.0 · {DATA_HOJE} · Documento de uso interno Toledo Digital",
+        f"Versão 1.0 · {DATA_HOJE} · Documento de uso interno SolutionSoftware",
         ParagraphStyle('r', fontSize=9, textColor=colors.grey, alignment=TA_CENTER)))
     story.append(PageBreak())
 

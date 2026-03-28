@@ -15,7 +15,7 @@
 >
 > Trabalho com sites e apps para negócios locais aqui em [cidade] — se um dia quiserem explorar, avise! 🙂
 >
-> Luís Toledo — Toledo Digital
+> Luís Toledo — SolutionSoftware
 
 ---
 
@@ -28,13 +28,13 @@
 >
 > Se tiver curiosidade, posso mostrar um exemplo rápido do que faço?
 >
-> Luís Toledo — Toledo Digital · +351 931 120 429
+> Luís Toledo — SolutionSoftware · +351 931 120 429
 
 ---
 
 ## EMAIL
 
-**Assunto:** Site profissional para [nome do negócio] — Toledo Digital
+**Assunto:** Site profissional para [nome do negócio] — SolutionSoftware
 
 > Olá [Nome],
 >
@@ -46,7 +46,7 @@
 >
 > Com os melhores cumprimentos,
 > Luís Toledo
-> Toledo Digital · toledothelast@gmail.com · +351 931 120 429
+> SolutionSoftware · toledothelast@gmail.com · +351 931 120 429
 
 ---
 
