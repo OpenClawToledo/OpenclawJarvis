@@ -1,0 +1,43 @@
+# ─── SEGREDOS (NUNCA no git) ───────────────────────────────────────────────
+.env
+.env.local
+*.env
+secrets.sh
+secrets.json
+openclaw.json
+
+# ─── BASES DE DADOS ────────────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ─── BUILDS / COMPILADOS ───────────────────────────────────────────────────
+**/target/
+**/node_modules/
+**/.mvn/
+*.jar
+*.war
+*.class
+
+# ─── LOGS ──────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── MEDIA / UPLOADS ───────────────────────────────────────────────────────
+**/uploads/*
+!**/uploads/.gitkeep
+/media/
+
+# ─── IDE / SISTEMA ─────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ─── TEMP ──────────────────────────────────────────────────────────────────
+tmp/
+temp/
+__pycache__/
+*.pyc
+memory/mercadopago.md

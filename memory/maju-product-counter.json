@@ -1,0 +1,21 @@
+{
+  "pending_count": 2,
+  "last_renovation": null,
+  "last_updated": "2026-03-28T19:57:00Z",
+  "items": [
+    {
+      "name": "Cropped Halter Copa 2026 🇧🇷",
+      "sizes": ["P (R$100)", "M (R$120)", "G (R$140)"],
+      "images": 2,
+      "status": "added_to_site",
+      "date": "2026-03-26"
+    },
+    {
+      "name": "Saia Copa 2026 Brasil 🇧🇷",
+      "price": "R$160",
+      "images": 1,
+      "status": "added_to_site",
+      "date": "2026-03-28"
+    }
+  ]
+}

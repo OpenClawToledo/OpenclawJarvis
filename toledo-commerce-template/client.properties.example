@@ -1,0 +1,59 @@
+## Toledo Commerce — Client Config Template
+## Copiar para src/main/resources/application.properties e preencher
+
+## ─── SERVIDOR ─────────────────────────────────────────────────────────────
+server.port=808X                          # porta única por projeto (ver TEMPLATE.md)
+
+## ─── BASE DE DADOS ────────────────────────────────────────────────────────
+spring.datasource.url=jdbc:sqlite:/data/.openclaw/workspace/[CLIENTE]-app/[CLIENTE].db
+spring.datasource.driver-class-name=org.sqlite.JDBC
+spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+spring.jpa.hibernate.ddl-auto=update
+
+## ─── UPLOADS ──────────────────────────────────────────────────────────────
+upload.dir=/data/.openclaw/workspace/[CLIENTE]-app/uploads
+
+## ─── SEGURANÇA ────────────────────────────────────────────────────────────
+jwt.secret=[CLIENTE]-secret-key-2026-toledo-digital-MUDAR
+jwt.expiration=86400000
+admin.secret=[CLIENTE]-admin-2026-MUDAR
+admin.email=[EMAIL_ADMIN_CLIENTE]
+
+## ─── CLIENTE / LOJA ───────────────────────────────────────────────────────
+app.name=[NOME DA LOJA]
+app.url=https://[DOMINIO].pt
+app.whatsapp=[NUMERO_WHATSAPP_BUSINESS]    # ex: 351912345678
+
+## ─── FUNCIONALIDADES (true/false) ────────────────────────────────────────
+feature.b2b=false              # portal empresarial (módulo B2B)
+feature.weight.pricing=false   # preço por kg (módulo weight-pricing)
+feature.allergens=false        # 14 alergénios (módulo allergens)
+feature.delivery=true          # entrega ao domicílio
+feature.pickup=true            # recolha na loja
+feature.instagram=false        # renovação posts Instagram
+
+## ─── B2B (apenas se feature.b2b=true) ───────────────────────────────────
+b2b.min.order.kg=5
+b2b.default.discount.percent=15
+b2b.invoice.day=1              # dia do mês para gerar faturas
+
+## ─── ENTREGAS ─────────────────────────────────────────────────────────────
+delivery.free.above=50.00      # entrega grátis acima de €X
+delivery.cost=5.00             # custo de entrega padrão
+delivery.zones=                # códigos postais separados por vírgula (vazio = todo PT)
+
+## ─── PAGAMENTOS ───────────────────────────────────────────────────────────
+# MercadoPago (Brasil)
+# mercadopago.access.token=
+# mercadopago.public.key=
+
+# Easypay (Portugal)
+# easypay.api.id=
+# easypay.api.key=
+
+# MB Way
+# mbway.alias=
+
+## ─── NOTIFICAÇÕES ─────────────────────────────────────────────────────────
+whatsapp.admin.number=[NUMERO_TOLEDO]      # para alertas internos
+whatsapp.store.number=[NUMERO_LOJA]        # para confirmações ao cliente

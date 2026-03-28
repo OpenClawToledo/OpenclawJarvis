@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fios MJ | Crochê Artesanal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rosa: #e91e7b;
+            --rosa-claro: #fce4ec;
+            --rosa-escuro: #c2185b;
+            --dourado: #d4a373;
+            --branco: #ffffff;
+            --cinza-claro: #f8f5f2;
+            --cinza: #666;
+            --escuro: #2d2d2d;
+            --whatsapp: #25D366;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--escuro);
+            background: var(--branco);
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--rosa) 0%, var(--rosa-escuro) 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: var(--branco);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 0.3rem;
+        }
+
+        .logo-text span {
+            color: var(--rosa-claro);
+        }
+
+        .tagline {
+            font-size: 1rem;
+            font-weight: 300;
+            opacity: 0.9;
+            letter-spacing: 1px;
+        }
+
+        .tagline-emoji {
+            font-size: 1.1rem;
+        }
+
+        /* NAV */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 1.5rem 1rem 1rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--rosa);
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        nav a:hover {
+            background: var(--rosa-claro);
+        }
+
+        /* HERO BANNER */
+        .hero {
+            background: var(--cinza-claro);
+            text-align: center;
+            padding: 3rem 1.5rem;
+        }
+
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--rosa-escuro);
+            margin-bottom: 0.8rem;
+        }
+
+        .hero p {
+            color: var(--cinza);
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--whatsapp);
+            color: white;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-whatsapp svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
+        /* SEÇÃO */
+        section {
+            padding: 3rem 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--rosa-escuro);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--cinza);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        /* PRODUTOS */
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .produto-card {
+            background: var(--branco);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .produto-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .produto-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            background: var(--cinza-claro);
+        }
+
+        .produto-info {
+            padding: 1.2rem;
+        }
+
+        .produto-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            margin-bottom: 0.3rem;
+            color: var(--escuro);
+        }
+
+        .produto-info .descricao {
+            color: var(--cinza);
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .produto-preco {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preco {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--rosa);
+        }
+
+        .preco-desde {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--cinza);
+        }
+
+        .btn-pedir {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: var(--rosa);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .btn-pedir:hover {
+            background: var(--rosa-escuro);
+        }
+
+        /* TAMANHOS */
+        .tamanhos {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .tamanho-tag {
+            background: var(--rosa-claro);
+            color: var(--rosa-escuro);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* SOBRE */
+        .sobre {
+            background: var(--cinza-claro);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            margin: 2rem auto;
+            max-width: 700px;
+        }
+
+        .sobre h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--rosa-escuro);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .sobre p {
+            color: var(--cinza);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .sobre .emoji-heart {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        /* COMO FUNCIONA */
+        .passos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .passo {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .passo-num {
+            width: 50px;
+            height: 50px;
+            background: var(--rosa);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .passo h3 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            color: var(--escuro);
+        }
+
+        .passo p {
+            font-size: 0.85rem;
+            color: var(--cinza);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--escuro);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+        }
+
+        footer .logo-footer {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        footer p {
+            opacity: 0.7;
+            font-size: 0.85rem;
+        }
+
+        footer .social-links {
+            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        footer .social-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        footer .social-links a:hover {
+            opacity: 1;
+        }
+
+        /* WHATSAPP FLUTUANTE */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--whatsapp);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            z-index: 999;
+            transition: transform 0.3s;
+            text-decoration: none;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+
+        .whatsapp-float svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 600px) {
+            .logo-text {
+                font-size: 2rem;
+            }
+
+            .hero h2 {
+                font-size: 1.4rem;
+            }
+
+            .produtos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sobre {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo-text">Fios <span>MJ</span></div>
+        <p class="tagline"><span class="tagline-emoji">💗</span> Crochê Artesanal — Mãe & Filha <span class="tagline-emoji">🧶</span></p>
+    </header>
+
+    <!-- NAV -->
+    <nav>
+        <a href="#produtos">Produtos</a>
+        <a href="#como-funciona">Como Pedir</a>
+        <a href="#sobre">Sobre Nós</a>
+        <a href="https://wa.me/5533999892409?text=Oi!%20Vi%20o%20site%20e%20quero%20saber%20mais%20sobre%20as%20peças%20🧶">💬 WhatsApp</a>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <h2>Peças únicas, feitas à mão com amor 💗</h2>
+        <p>Cada peça é artesanal e exclusiva. Feita sob encomenda especialmente pra você.</p>
+        <a href="https://wa.me/5533999892409?text=Oi!%20Quero%20encomendar%20uma%20peça%20🧶" class="btn-whatsapp">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Peça a sua agora!
+        </a>
+    </div>
+
+    <!-- PRODUTOS -->
+    <section id="produtos">
+        <h2 class="section-title">Nossos Produtos</h2>
+        <p class="section-subtitle">Peças artesanais feitas com carinho 🧶</p>
+
+        <div class="produtos-grid">
+
+            <!-- Cropped Brasil -->
+            <div class="produto-card">
+                <img src="img/cropped-brasil.jpg" alt="Cropped Halter Brasil em crochê nas cores verde, amarelo e azul" class="produto-img">
+                <div class="produto-info">
+                    <h3>🇧🇷 Cropped Halter Brasil</h3>
+                    <p class="descricao">Cropped de crochê nas cores do Brasil. Perfeito pra Copa, jogos e festas!</p>
+                    <div class="tamanhos">
+                        <span class="tamanho-tag">P — R$100</span>
+                        <span class="tamanho-tag">M — R$120</span>
+                        <span class="tamanho-tag">G — R$150</span>
+                    </div>
+                    <div class="produto-preco">
+                        <div class="preco"><span class="preco-desde">a partir de</span><br>R$ 100</div>
+                        <a href="https://wa.me/5533999892409?text=Oi!%20Quero%20o%20Cropped%20Brasil%20🇧🇷%20Tamanho:%20" class="btn-pedir">Pedir →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nossa Senhora -->
+            <div class="produto-card">
+                <img src="img/nossa-senhora.jpg" alt="Amigurumi Nossa Senhora em crochê com detalhes dourados e terço" class="produto-img">
+                <div class="produto-info">
+                    <h3>🙏 Amigurumi Nossa Senhora</h3>
+                    <p class="descricao">Peça delicada com detalhes em dourado, Sagrado Coração e terço. Presente perfeito!</p>
+                    <div class="produto-preco">
+                        <div class="preco">R$ 80</div>
+                        <a href="https://wa.me/5533999892409?text=Oi!%20Quero%20o%20Amigurumi%20Nossa%20Senhora%20🙏" class="btn-pedir">Pedir →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caneta -->
+            <div class="produto-card">
+                <img src="img/caneta.jpg" alt="Caneta decorada com crochê artesanal" class="produto-img">
+                <div class="produto-info">
+                    <h3>✏️ Caneta Decorada</h3>
+                    <p class="descricao">Caneta com acabamento em crochê. Fofa, funcional e ótima pra presentear!</p>
+                    <div class="produto-preco">
+                        <div class="preco">R$ 20</div>
+                        <a href="https://wa.me/5533999892409?text=Oi!%20Quero%20a%20Caneta%20Decorada%20✏️" class="btn-pedir">Pedir →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- COMO FUNCIONA -->
+    <section id="como-funciona" style="background: var(--cinza-claro); border-radius: 20px; max-width: 800px;">
+        <h2 class="section-title">Como Encomendar</h2>
+        <p class="section-subtitle">Simples e rápido! 💨</p>
+
+        <div class="passos">
+            <div class="passo">
+                <div class="passo-num">1</div>
+                <h3>Escolha</h3>
+                <p>Veja nosso catálogo e escolha sua peça favorita</p>
+            </div>
+            <div class="passo">
+                <div class="passo-num">2</div>
+                <h3>Fale conosco</h3>
+                <p>Chame no WhatsApp e combine os detalhes (cor, tamanho, personalização)</p>
+            </div>
+            <div class="passo">
+                <div class="passo-num">3</div>
+                <h3>Receba</h3>
+                <p>A peça é feita com carinho e enviada pra você! 💗</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section id="sobre">
+        <div class="sobre">
+            <span class="emoji-heart">💗🧶</span>
+            <h2>Sobre a Fios MJ</h2>
+            <p>
+                Somos <strong>mãe e filha</strong> unidas pelo amor ao crochê. Cada peça que fazemos carrega carinho, dedicação e horas de trabalho artesanal.
+                <br><br>
+                Na Fios MJ, acreditamos que o feito à mão tem alma. Por isso, criamos peças únicas e sob encomenda — do jeitinho que você imaginar.
+                <br><br>
+                📍 Peças sob encomenda · Entregamos para todo o Brasil
+            </p>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <div class="hero" style="background: linear-gradient(135deg, var(--rosa) 0%, var(--rosa-escuro) 100%); color: white;">
+        <h2 style="color: white;">Quer uma peça exclusiva? 🧶</h2>
+        <p style="color: rgba(255,255,255,0.9);">Entre em contato pelo WhatsApp e faça sua encomenda!</p>
+        <a href="https://wa.me/5533999892409?text=Oi!%20Vi%20o%20site%20e%20quero%20encomendar%20🧶" class="btn-whatsapp" style="background: white; color: var(--rosa-escuro);">
+            <svg viewBox="0 0 24 24" style="fill: var(--whatsapp);"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Chamar no WhatsApp 📲
+        </a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="logo-footer">Fios MJ</div>
+        <div class="social-links">
+            <a href="https://instagram.com/fiosmjcroche" target="_blank">📸 Instagram @fiosmjcroche</a>
+        </div>
+        <p>💗 Crochê artesanal feito com amor — Mãe & Filha 🧶</p>
+        <p style="margin-top: 0.5rem; opacity: 0.5; font-size: 0.75rem;">© 2025 Fios MJ — Todos os direitos reservados</p>
+    </footer>
+
+    <!-- WHATSAPP FLUTUANTE -->
+    <a href="https://wa.me/5533999892409?text=Oi!%20Vi%20o%20site%20da%20Fios%20MJ%20🧶" class="whatsapp-float" target="_blank" title="Fale conosco no WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+
+</body>
+</html>

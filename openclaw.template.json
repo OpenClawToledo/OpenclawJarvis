@@ -1,0 +1,23 @@
+{
+  "_comment": "Copia para openclaw.json e preenche os valores marcados com PREENCHER",
+  "model": "anthropic/claude-sonnet-4-6",
+  "workspace": "/data/.openclaw/workspace",
+  "channels": {
+    "whatsapp": {
+      "enabled": true,
+      "authorizedSenders": ["PREENCHER_TEU_NUMERO"]
+    }
+  },
+  "anthropic": {
+    "apiKey": "PREENCHER_ANTHROPIC_KEY"
+  },
+  "memorySearch": {
+    "provider": "gemini",
+    "model": "gemini-embedding-001",
+    "apiKey": "PREENCHER_GEMINI_KEY"
+  },
+  "heartbeat": {
+    "enabled": true,
+    "intervalMinutes": 30
+  }
+}
