@@ -41,3 +41,4 @@ temp/
 __pycache__/
 *.pyc
 memory/mercadopago.md
+mercadopago-credentials.md
