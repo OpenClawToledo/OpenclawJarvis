@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SolutionSoftware — Sites e aplicações para pequenos negócios em Portugal. Rápido, acessível, sem complicações.">
+  <title>SolutionSoftware — Sites & Apps para o seu negócio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --azul: #1a2e4a;
+      --azul2: #2d4a6e;
+      --dourado: #c8960c;
+      --dourado2: #f0b429;
+      --cinza: #f7f9fc;
+      --texto: #1e293b;
+      --subtexto: #64748b;
+      --branco: #ffffff;
+      --radius: 12px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--texto); background: var(--branco); }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(26,46,74,0.97); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 64px;
+    }
+    .logo { color: var(--branco); font-weight: 800; font-size: 1.25rem; letter-spacing: -0.5px; }
+    .logo span { color: var(--dourado2); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--dourado2); }
+    .nav-cta {
+      background: var(--dourado); color: var(--azul); padding: 0.5rem 1.25rem;
+      border-radius: 8px; font-weight: 700; font-size: 0.9rem; text-decoration: none;
+      transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--dourado2); }
+    @media(max-width:768px){
+      .nav-links { display: none; }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--azul) 0%, var(--azul2) 60%, #1e3a5f 100%);
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 80px 5% 60px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(200,150,12,0.1) 0%, transparent 60%);
+    }
+    .hero-badge {
+      display: inline-block; background: rgba(200,150,12,0.15); color: var(--dourado2);
+      border: 1px solid rgba(200,150,12,0.3); padding: 0.35rem 1rem;
+      border-radius: 50px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1.5rem;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem); color: var(--branco);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem; max-width: 800px; margin: 0 auto 1.5rem;
+    }
+    .hero h1 span { color: var(--dourado2); }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(255,255,255,0.75);
+      max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--dourado); color: var(--azul); padding: 1rem 2rem;
+      border-radius: var(--radius); font-weight: 700; font-size: 1rem;
+      text-decoration: none; transition: all .2s; border: none; cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--dourado2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,150,12,0.3); }
+    .btn-secondary {
+      background: transparent; color: var(--branco); padding: 1rem 2rem;
+      border-radius: var(--radius); font-weight: 600; font-size: 1rem;
+      text-decoration: none; border: 2px solid rgba(255,255,255,0.3); transition: all .2s;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.05); }
+    .hero-stats {
+      display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap;
+      margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2rem; font-weight: 800; color: var(--dourado2); display: block; }
+    .stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 0.25rem; }
+
+    /* SECTIONS */
+    section { padding: 80px 5%; }
+    .section-label {
+      font-size: 0.8rem; font-weight: 700; color: var(--dourado); text-transform: uppercase;
+      letter-spacing: 1.5px; margin-bottom: 0.75rem;
+    }
+    .section-title { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 800; line-height: 1.2; margin-bottom: 1rem; }
+    .section-sub { font-size: 1.05rem; color: var(--subtexto); max-width: 580px; line-height: 1.7; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* COMO FUNCIONA */
+    .steps-bg { background: var(--cinza); }
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem; margin-top: 3rem;
+    }
+    .step {
+      background: var(--branco); border-radius: var(--radius); padding: 2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); text-align: center;
+      border-top: 3px solid var(--dourado);
+    }
+    .step-num {
+      width: 48px; height: 48px; background: var(--azul); color: var(--branco);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem; margin: 0 auto 1rem;
+    }
+    .step h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .step p { font-size: 0.9rem; color: var(--subtexto); line-height: 1.6; }
+
+    /* SERVIÇOS */
+    .services-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .service-card {
+      border: 1.5px solid #e2e8f0; border-radius: var(--radius); padding: 2rem;
+      transition: all .2s; position: relative; overflow: hidden;
+    }
+    .service-card:hover { border-color: var(--dourado); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+    .service-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .service-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .service-card p { font-size: 0.9rem; color: var(--subtexto); line-height: 1.6; }
+    .service-tag {
+      display: inline-block; background: var(--cinza); color: var(--azul);
+      padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem;
+      font-weight: 600; margin-top: 1rem;
+    }
+
+    /* PREÇOS */
+    .pricing-bg { background: var(--cinza); }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem; margin-top: 3rem; align-items: start;
+    }
+    .price-card {
+      background: var(--branco); border-radius: var(--radius); padding: 2rem;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06); border: 2px solid transparent;
+    }
+    .price-card.featured {
+      border-color: var(--dourado); position: relative;
+    }
+    .featured-badge {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--dourado); color: var(--azul); padding: 0.25rem 1rem;
+      border-radius: 50px; font-size: 0.75rem; font-weight: 700; white-space: nowrap;
+    }
+    .price-name { font-weight: 700; color: var(--subtexto); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+    .price-amount { font-size: 2.5rem; font-weight: 800; margin: 0.5rem 0; color: var(--azul); }
+    .price-amount span { font-size: 1rem; font-weight: 400; color: var(--subtexto); }
+    .price-desc { font-size: 0.9rem; color: var(--subtexto); margin-bottom: 1.5rem; }
+    .price-features { list-style: none; margin-bottom: 2rem; }
+    .price-features li { padding: 0.5rem 0; font-size: 0.9rem; border-bottom: 1px solid var(--cinza); display: flex; gap: 0.5rem; align-items: flex-start; }
+    .price-features li::before { content: '✓'; color: var(--dourado); font-weight: 700; flex-shrink: 0; }
+    .btn-plan {
+      display: block; text-align: center; padding: 0.85rem;
+      border-radius: 8px; font-weight: 700; font-size: 0.95rem;
+      text-decoration: none; transition: all .2s;
+    }
+    .btn-plan-primary { background: var(--azul); color: var(--branco); }
+    .btn-plan-primary:hover { background: var(--azul2); }
+    .btn-plan-outline { border: 2px solid var(--azul); color: var(--azul); }
+    .btn-plan-outline:hover { background: var(--azul); color: var(--branco); }
+
+    /* PORTFÓLIO */
+    .portfolio-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .portfolio-card {
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: transform .2s;
+    }
+    .portfolio-card:hover { transform: translateY(-4px); }
+    .portfolio-img {
+      height: 180px; display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+    }
+    .portfolio-body { padding: 1.5rem; background: var(--branco); }
+    .portfolio-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .portfolio-body p { font-size: 0.85rem; color: var(--subtexto); }
+    .portfolio-tags { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+    .portfolio-tag {
+      font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem;
+      border-radius: 50px; background: var(--cinza); color: var(--azul);
+    }
+    .coming-soon { opacity: 0.65; }
+
+    /* CONTACTO */
+    .contact-bg { background: var(--azul); }
+    .contact-wrap {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    @media(max-width:768px){ .contact-wrap { grid-template-columns: 1fr; } }
+    .contact-info .section-title { color: var(--branco); }
+    .contact-info .section-sub { color: rgba(255,255,255,0.7); }
+    .contact-detail { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.5rem; }
+    .contact-detail span { color: rgba(255,255,255,0.85); font-size: 0.95rem; }
+    .contact-form {
+      background: var(--branco); border-radius: var(--radius); padding: 2.5rem;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+    }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--texto); }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.75rem 1rem; border: 1.5px solid #e2e8f0;
+      border-radius: 8px; font-size: 0.95rem; font-family: inherit;
+      transition: border-color .2s; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--dourado); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media(max-width:500px){ .form-row { grid-template-columns: 1fr; } }
+    .btn-submit {
+      width: 100%; padding: 1rem; background: var(--azul); color: var(--branco);
+      border: none; border-radius: 8px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: all .2s; font-family: inherit;
+    }
+    .btn-submit:hover { background: var(--azul2); transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer {
+      background: #0f1a29; color: rgba(255,255,255,0.6);
+      text-align: center; padding: 2rem 5%; font-size: 0.85rem;
+    }
+    footer strong { color: var(--dourado2); }
+
+    /* WHATSAPP FLOAT */
+    .wa-btn {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999;
+      width: 56px; height: 56px; border-radius: 50%; background: #25D366;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.4); text-decoration: none;
+      transition: transform .2s;
+    }
+    .wa-btn:hover { transform: scale(1.1); }
+    .wa-btn svg { width: 28px; height: 28px; fill: white; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Solution<span>Software</span></div>
+  <ul class="nav-links">
+    <li><a href="#como-funciona">Como funciona</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#portfolio">Portfólio</a></li>
+    <li><a href="#precos">Preços</a></li>
+  </ul>
+  <a href="#contacto" class="nav-cta">Pedir orçamento</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-badge">🇵🇹 Baseados em Portugal · Entregamos em toda a Europa</div>
+    <h1>O seu negócio merece um site que <span>trabalha por si</span></h1>
+    <p>Sites profissionais, apps de pedidos e presença digital completa para pequenos negócios. Rápido, acessível e sem complicações.</p>
+    <div class="hero-btns">
+      <a href="#contacto" class="btn-primary">Quero um orçamento grátis</a>
+      <a href="#portfolio" class="btn-secondary">Ver portfólio</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">€350</span>
+        <div class="stat-label">Preço de entrada</div>
+      </div>
+      <div class="stat">
+        <span class="stat-num">20</span>
+        <div class="stat-label">Dias de entrega</div>
+      </div>
+      <div class="stat">
+        <span class="stat-num">€0</span>
+        <div class="stat-label">Adiantamento necessário</div>
+      </div>
+      <div class="stat">
+        <span class="stat-num">12</span>
+        <div class="stat-label">Meses de suporte</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona" class="steps-bg">
+  <div class="text-center">
+    <div class="section-label">Processo simples</div>
+    <h2 class="section-title">Da ideia ao site em 4 passos</h2>
+    <p class="section-sub">Sem reuniões desnecessárias. Sem jargão técnico. Só resultados.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Conversa inicial</h3>
+      <p>Conta-nos o seu negócio em 30 minutos. Percebemos o que precisa e enviamos uma proposta no próprio dia.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Recolha de conteúdos</h3>
+      <p>Envia-nos logo, textos e fotos por WhatsApp. Nós tratamos do resto — domínio, servidor, SSL.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Desenvolvimento</h3>
+      <p>Desenvolvemos o site em 15 a 20 dias. Vê o progresso, pede ajustes — até ficar perfeito.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Entrega e formação</h3>
+      <p>Site no ar, formação de 30 minutos, todas as passwords nas suas mãos. Paga só quando estiver satisfeito.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="text-center">
+    <div class="section-label">O que fazemos</div>
+    <h2 class="section-title">Soluções digitais para cada negócio</h2>
+    <p class="section-sub">Desde restaurantes a gabinetes de contabilidade — temos a solução certa para si.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🌐</div>
+      <h3>Site Profissional</h3>
+      <p>Site moderno, rápido e optimizado para Google. Aparece nos resultados de pesquisa quando os clientes procuram o seu negócio.</p>
+      <span class="service-tag">Todos os sectores</span>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📱</div>
+      <h3>App de Pedidos QR Code</h3>
+      <p>Clientes lêem o QR na mesa, fazem o pedido pelo telemóvel e o pedido chega em tempo real à cozinha. Sem papel, sem demoras.</p>
+      <span class="service-tag">Restaurantes & Cafés</span>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛒</div>
+      <h3>Loja Online</h3>
+      <p>Venda os seus produtos 24 horas por dia. Catálogo, carrinho, pagamentos integrados e gestão de encomendas simplificada.</p>
+      <span class="service-tag">Comércio & Artesanato</span>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌍</div>
+      <h3>Site Bilingue</h3>
+      <p>Site em Português e Mandarim (中文) para negócios que servem a comunidade chinesa em Portugal. SEO optimizado nos dois idiomas.</p>
+      <span class="service-tag">Comunidade chinesa</span>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📍</div>
+      <h3>Google Meu Negócio</h3>
+      <p>Apareça no mapa do Google com fotos, horários, avaliações e contacto directo. O primeiro passo para clientes locais encontrarem-no.</p>
+      <span class="service-tag">Presença local</span>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔧</div>
+      <h3>Suporte & Manutenção</h3>
+      <p>Actualização de conteúdos, pequenas alterações, monitorização e resposta em 24h. Focado no negócio, nós tratamos da tecnologia.</p>
+      <span class="service-tag">Todos os clientes</span>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFÓLIO -->
+<section id="portfolio" style="background: var(--cinza);">
+  <div class="text-center">
+    <div class="section-label">Trabalho real</div>
+    <h2 class="section-title">Projectos entregues</h2>
+    <p class="section-sub">Negócios reais que cresceram com presença digital.</p>
+  </div>
+  <div class="portfolio-grid">
+    <div class="portfolio-card">
+      <div class="portfolio-img" style="background: linear-gradient(135deg,#1a2e4a,#4a6fa5);">🧶</div>
+      <div class="portfolio-body">
+        <h3>Fios MJ — Loja de Crochê</h3>
+        <p>Loja online completa com catálogo de produtos, carrinho de compras, pagamentos via MercadoPago e painel de administração.</p>
+        <div class="portfolio-tags">
+          <span class="portfolio-tag">Loja Online</span>
+          <span class="portfolio-tag">Spring Boot</span>
+          <span class="portfolio-tag">MercadoPago</span>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-card coming-soon">
+      <div class="portfolio-img" style="background: linear-gradient(135deg,#1e3a5f,#2d6a8f);">🍽️</div>
+      <div class="portfolio-body">
+        <h3>Mar de Prata — Restaurante</h3>
+        <p>App de pedidos por QR Code nas mesas. Pedidos em tempo real na cozinha. Menu digital com alergénios. <em>Em desenvolvimento.</em></p>
+        <div class="portfolio-tags">
+          <span class="portfolio-tag">App QR</span>
+          <span class="portfolio-tag">WebSocket</span>
+          <span class="portfolio-tag">Em breve</span>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-card coming-soon">
+      <div class="portfolio-img" style="background: linear-gradient(135deg,#2d4a6e,#1a2e4a);">👩‍💼</div>
+      <div class="portfolio-body">
+        <h3>Gabinete Contabilidade Song</h3>
+        <p>Site profissional bilingue PT + 中文 com SEO local, WeChat integrado e formulário de marcação de consulta. <em>Em desenvolvimento.</em></p>
+        <div class="portfolio-tags">
+          <span class="portfolio-tag">Bilingue PT+中文</span>
+          <span class="portfolio-tag">SEO Local</span>
+          <span class="portfolio-tag">Em breve</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREÇOS -->
+<section id="precos" class="pricing-bg">
+  <div class="text-center">
+    <div class="section-label">Transparência total</div>
+    <h2 class="section-title">Preços claros, sem surpresas</h2>
+    <p class="section-sub">Sem adiantamentos. Paga apenas quando o trabalho estiver entregue e aprovado por si.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Essencial</div>
+      <div class="price-amount">€350 <span>a €450</span></div>
+      <div class="price-desc">Para quem quer marcar presença online rapidamente.</div>
+      <ul class="price-features">
+        <li>Site até 5 páginas</li>
+        <li>Domínio + servidor (1.º ano)</li>
+        <li>SSL + RGPD compliant</li>
+        <li>SEO básico + Google Meu Negócio</li>
+        <li>Formulário de contacto</li>
+        <li>1 revisão incluída</li>
+        <li>Formação de 30 min</li>
+        <li>Entrega em ~15 dias</li>
+      </ul>
+      <a href="#contacto" class="btn-plan btn-plan-outline">Pedir orçamento</a>
+    </div>
+    <div class="price-card featured">
+      <div class="featured-badge">⭐ Mais popular</div>
+      <div class="price-name">Standard</div>
+      <div class="price-amount">€550 <span>a €700</span></div>
+      <div class="price-desc">Presença digital completa com funcionalidades avançadas.</div>
+      <ul class="price-features">
+        <li>Tudo do Essencial</li>
+        <li>Blog ou catálogo de produtos</li>
+        <li>Área reservada / login de clientes</li>
+        <li>2 integrações (WhatsApp, reservas, QR...)</li>
+        <li>2 revisões incluídas</li>
+        <li>Formação de 45 min</li>
+        <li>Entrega em ~20 dias</li>
+        <li>Suporte 12 meses</li>
+      </ul>
+      <a href="#contacto" class="btn-plan btn-plan-primary">Pedir orçamento</a>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Premium</div>
+      <div class="price-amount">€900 <span>a €1.200</span></div>
+      <div class="price-desc">Solução completa para negócios que querem escalar.</div>
+      <ul class="price-features">
+        <li>Tudo do Standard</li>
+        <li>Loja online com pagamentos</li>
+        <li>App mobile (Android / iOS)</li>
+        <li>Painel de gestão avançado</li>
+        <li>Integrações ilimitadas</li>
+        <li>3 meses de suporte intensivo</li>
+        <li>Entrega em ~30 dias</li>
+        <li>Consultoria estratégica incluída</li>
+      </ul>
+      <a href="#contacto" class="btn-plan btn-plan-outline">Pedir orçamento</a>
+    </div>
+  </div>
+  <p style="text-align:center; margin-top:2rem; font-size:0.9rem; color:var(--subtexto);">
+    💡 Domínio (~€10/ano) e servidor (~€6-12/mês) ficam em nome do cliente, pagos directamente à Hostinger.
+  </p>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto" class="contact-bg">
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <div class="section-label" style="color:var(--dourado2);">Fale connosco</div>
+      <h2 class="section-title">Vamos construir algo juntos?</h2>
+      <p class="section-sub">Orçamento gratuito em menos de 24 horas. Sem compromisso.</p>
+      <div class="contact-detail">
+        <span>📱 WhatsApp: +351 931 120 429</span>
+      </div>
+      <div class="contact-detail">
+        <span>✉️ toledothelast@gmail.com</span>
+      </div>
+      <div class="contact-detail">
+        <span>📍 Leça da Palmeira, Porto — Portugal</span>
+      </div>
+      <div class="contact-detail">
+        <span>🌍 Serviços em PT, BR e para comunidade chinesa em PT</span>
+      </div>
+    </div>
+    <div class="contact-form">
+      <h3 style="margin-bottom:1.5rem; font-size:1.2rem;">Pedir orçamento grátis</h3>
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome *</label>
+            <input type="text" name="nome" required placeholder="O seu nome">
+          </div>
+          <div class="form-group">
+            <label>Telemóvel *</label>
+            <input type="tel" name="telefone" required placeholder="+351 9XX XXX XXX">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="email@exemplo.com">
+        </div>
+        <div class="form-group">
+          <label>Nome do negócio</label>
+          <input type="text" name="empresa" placeholder="Restaurante, gabinete, loja...">
+        </div>
+        <div class="form-group">
+          <label>O que precisa?</label>
+          <select name="pacote">
+            <option value="">Seleccionar...</option>
+            <option value="essencial">Site simples (Essencial)</option>
+            <option value="standard">Site completo (Standard)</option>
+            <option value="qr">App QR Code para restaurante</option>
+            <option value="loja">Loja online</option>
+            <option value="bilingue">Site bilingue PT + 中文</option>
+            <option value="premium">Solução completa (Premium)</option>
+            <option value="outro">Outro / Não sei ainda</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Mensagem (opcional)</label>
+          <textarea name="mensagem" placeholder="Conte-nos um pouco sobre o seu negócio..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Enviar pedido →</button>
+        <p id="form-msg" style="margin-top:1rem; text-align:center; font-size:0.9rem; display:none;"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 <strong>SolutionSoftware</strong> · Desenvolvido com ❤️ em Portugal · Todos os direitos reservados</p>
+  <p style="margin-top:0.5rem;">+351 931 120 429 · toledothelast@gmail.com</p>
+</footer>
+
+<!-- WhatsApp float -->
+<a class="wa-btn" href="https://wa.me/351931120429?text=Olá!%20Vi%20o%20site%20da%20SolutionSoftware%20e%20gostaria%20de%20pedir%20um%20orçamento." target="_blank" title="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(this));
+    const msg = document.getElementById('form-msg');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        msg.style.color = '#16a34a';
+        msg.textContent = '✅ Mensagem enviada! Entraremos em contacto em menos de 24h.';
+        this.reset();
+      } else {
+        throw new Error();
+      }
+    } catch {
+      msg.style.color = '#dc2626';
+      msg.textContent = '❌ Erro ao enviar. Por favor contacte-nos pelo WhatsApp.';
+    }
+    msg.style.display = 'block';
+  });
+</script>
+</body>
+</html>
