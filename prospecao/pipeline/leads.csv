@@ -1,0 +1,4 @@
+id,nome,empresa,setor,telefone,email,cidade,pais,status,canal,origem,pacote_interesse,valor_estimado,notas,data_criacao,data_ultimo_contacto,data_proximo_followup
+1,Jiaxin Song,Gabinete Contabilidade Song,gabinete,+351966599195,jiaxinsong327@gmail.com,Porto,PT,FECHADO,whatsapp,referencia_sr_song,standard,600,Site bilingue PT+ZH. Pai tem restaurante Mar de Prata. QR grátis como brinde.,2026-03-24,2026-03-28,
+2,Sr. Song,Mar de Prata,restaurante,,jiaxinsong327@gmail.com,Porto,PT,FECHADO,whatsapp,contacto_direto,qr_app,0,App QR grátis como brinde - estratégia fidelização. Pai ainda indeciso mas receberá o app.,2026-03-24,2026-03-28,
+3,,Carnes São Martinho,talho/retalho,,geral@carnessaomartinho.pt,Portugal,PT,PROPOSTA,email,google_maps,essencial,350,Email enviado 2026-03-25. Follow-up em 2026-04-03.,2026-03-25,2026-03-25,2026-04-03
