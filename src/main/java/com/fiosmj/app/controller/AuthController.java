@@ -3,6 +3,8 @@ package com.fiosmj.app.controller;
 import com.fiosmj.app.model.Customer;
 import com.fiosmj.app.repository.CustomerRepository;
 import com.fiosmj.app.security.JwtUtil;
+import com.fiosmj.app.security.RateLimiter;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,11 +22,14 @@ public class AuthController {
     private final CustomerRepository customerRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final RateLimiter rateLimiter;
 
-    public AuthController(CustomerRepository customerRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+    public AuthController(CustomerRepository customerRepository, JwtUtil jwtUtil,
+                          PasswordEncoder passwordEncoder, RateLimiter rateLimiter) {
         this.customerRepository = customerRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
+        this.rateLimiter = rateLimiter;
     }
 
     @PostMapping("/register")
@@ -54,7 +59,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> body, HttpServletRequest request) {
+        String ip = request.getRemoteAddr();
+
+        // Rate limiting — máximo 5 tentativas por IP em 15 minutos
+        if (!rateLimiter.isAllowed(ip)) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body(Map.of("error", "Demasiadas tentativas. Tente novamente em 15 minutos."));
+        }
+
         String email = body.get("email");
         String password = body.get("password");
 
@@ -65,6 +78,7 @@ public class AuthController {
         return customerRepository.findByEmail(email.toLowerCase().trim())
             .filter(c -> passwordEncoder.matches(password, c.getPasswordHash()))
             .map(c -> {
+                rateLimiter.reset(ip); // login bem-sucedido — limpar contador
                 c.setLastSeenAt(LocalDateTime.now());
                 customerRepository.save(c);
                 String token = jwtUtil.generateToken(c.getEmail());

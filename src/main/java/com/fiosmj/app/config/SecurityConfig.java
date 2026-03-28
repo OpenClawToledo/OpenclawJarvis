@@ -27,34 +27,34 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // Rotas públicas — API
                 .requestMatchers(
                     "/api/auth/**",
                     "/api/products/**",
                     "/api/checkout/**",
-                    "/api/social/**",
                     "/api/checkout/webhook",
-                    "/api/newsletter/**",
                     "/api/blog/**",
-                    "/api/contact",
-                    "/politica-de-privacidade",
-                    "/termos-e-condicoes",
-                    "/contacto",
-                    "/api/blog/**",
-                    "/api/admin/blog/**",
                     "/api/contact",
                     "/api/stats/**",
-                    "/api/presence/**"
+                    "/api/presence/**",
+                    "/api/newsletter/subscribe",
+                    "/api/social/testimonials"
                 ).permitAll()
-                // Permit all static resources and page routes
+                // Recursos estáticos e páginas públicas
                 .requestMatchers(
                     "/", "/index.html",
                     "/obrigado", "/pendente",
                     "/politica-de-privacidade", "/termos-e-condicoes", "/contacto",
-                    "/assets/**", "/img/**",
-                    "/*.js", "/*.css", "/*.ico", "/*.png", "/*.jpg", "/*.svg"
+                    "/assets/**", "/img/**", "/uploads/**",
+                    "/*.js", "/*.css", "/*.ico", "/*.png", "/*.jpg", "/*.svg",
+                    "/sitemap.xml", "/robots.txt", "/favicon.ico"
                 ).permitAll()
+                // Rotas autenticadas — cliente
                 .requestMatchers("/api/cart/**", "/api/orders/**", "/api/customers/**").authenticated()
-                .anyRequest().permitAll()
+                // Rotas admin — requerem autenticação (+ X-Admin-Secret no controlador)
+                .requestMatchers("/api/admin/**", "/api/newsletter/admin/**", "/api/social/admin/**").authenticated()
+                // Tudo o resto requer autenticação (fail-safe)
+                .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
