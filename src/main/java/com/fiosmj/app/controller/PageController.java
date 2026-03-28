@@ -1,11 +1,25 @@
 package com.fiosmj.app.controller;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 @Controller
 public class PageController {
+
+    @GetMapping("/admin")
+    public ResponseEntity<byte[]> admin() throws IOException {
+        var resource = new ClassPathResource("static/admin.html");
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_HTML)
+                .body(resource.getInputStream().readAllBytes());
+    }
 
     @GetMapping("/obrigado")
     @ResponseBody

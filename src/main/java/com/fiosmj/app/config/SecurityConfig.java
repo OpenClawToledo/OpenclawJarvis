@@ -38,11 +38,14 @@ public class SecurityConfig {
                     "/api/stats/**",
                     "/api/presence/**",
                     "/api/newsletter/subscribe",
-                    "/api/social/testimonials"
+                    "/api/social/testimonials",
+                    // Admin de produtos — protegido por X-Admin-Secret no controller
+                    "/api/admin/products/**"
                 ).permitAll()
                 // Recursos estáticos e páginas públicas
                 .requestMatchers(
                     "/", "/index.html",
+                    "/admin",
                     "/obrigado", "/pendente",
                     "/politica-de-privacidade", "/termos-e-condicoes", "/contacto",
                     "/assets/**", "/img/**", "/uploads/**",

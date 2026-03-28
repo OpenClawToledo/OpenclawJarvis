@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fios MJ — Admin</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #fdf6f0; color: #333; }
+    header { background: #8B4513; color: white; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+    header h1 { font-size: 1.2rem; }
+    .badge { background: #fff3; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; }
+    main { max-width: 1000px; margin: 24px auto; padding: 0 16px; }
+
+    /* LOGIN */
+    #login-screen { max-width: 360px; margin: 80px auto; background: white; border-radius: 12px; padding: 32px; box-shadow: 0 2px 12px #0001; }
+    #login-screen h2 { margin-bottom: 20px; color: #8B4513; }
+    input, textarea, select { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 0.95rem; margin-bottom: 12px; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #8B4513; }
+    button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem; }
+    .btn-primary { background: #8B4513; color: white; }
+    .btn-primary:hover { background: #7a3a10; }
+    .btn-danger { background: #e53e3e; color: white; }
+    .btn-success { background: #38a169; color: white; }
+    .btn-sm { padding: 6px 12px; font-size: 0.82rem; }
+    .btn-outline { background: white; border: 1.5px solid #8B4513; color: #8B4513; }
+
+    /* TOOLBAR */
+    .toolbar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+    .toolbar h2 { flex: 1; font-size: 1.1rem; }
+
+    /* CARDS */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .product-card { background: white; border-radius: 12px; box-shadow: 0 1px 6px #0001; overflow: hidden; }
+    .product-card img { width: 100%; height: 180px; object-fit: cover; background: #f5e6d8; }
+    .product-card .info { padding: 14px; }
+    .product-card .name { font-weight: 600; margin-bottom: 4px; }
+    .product-card .cat { font-size: 0.8rem; color: #888; margin-bottom: 6px; }
+    .product-card .price { color: #8B4513; font-weight: 700; font-size: 1.05rem; }
+    .product-card .stock { font-size: 0.8rem; color: #555; margin-top: 4px; }
+    .product-card .actions { padding: 10px 14px; display: flex; gap: 8px; border-top: 1px solid #f0e8e0; }
+    .inactive { opacity: 0.5; }
+    .tag-inactive { display: inline-block; background: #fed7d7; color: #c53030; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: #0006; display: flex; align-items: center; justify-content: center; z-index: 100; }
+    .modal { background: white; border-radius: 14px; padding: 28px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; }
+    .modal h3 { margin-bottom: 18px; color: #8B4513; }
+    .modal label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; color: #555; }
+    .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+
+    /* SIZES */
+    .sizes-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .sizes-row input { margin-bottom: 0; }
+
+    /* ALERT */
+    .alert { padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 0.9rem; }
+    .alert-success { background: #c6f6d5; color: #276749; }
+    .alert-error { background: #fed7d7; color: #9b2c2c; }
+
+    .spinner { text-align: center; padding: 60px; font-size: 1.5rem; color: #8B4513; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen" style="display:block">
+  <h2>🧶 Fios MJ Admin</h2>
+  <p style="margin-bottom:18px;color:#666;font-size:0.9rem">Entra com a senha de administrador</p>
+  <label>Senha Admin</label>
+  <input type="password" id="login-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+  <button class="btn-primary" style="width:100%" onclick="doLogin()">Entrar</button>
+  <div id="login-error" class="alert alert-error" style="display:none;margin-top:12px"></div>
+</div>
+
+<!-- PAINEL -->
+<div id="panel" style="display:none">
+  <header>
+    <span style="font-size:1.5rem">🧶</span>
+    <h1>Fios MJ — Painel Admin</h1>
+    <span class="badge" id="product-count">...</span>
+    <button class="btn-outline btn-sm" style="margin-left:auto" onclick="logout()">Sair</button>
+  </header>
+
+  <main>
+    <div id="alert-box" style="display:none"></div>
+
+    <div class="toolbar">
+      <h2>Produtos</h2>
+      <button class="btn-outline btn-sm" onclick="loadProducts()">↻ Actualizar</button>
+      <button class="btn-primary btn-sm" onclick="openCreate()">+ Novo Produto</button>
+    </div>
+
+    <div id="products-container" class="spinner">A carregar...</div>
+  </main>
+</div>
+
+<!-- MODAL PRODUTO -->
+<div id="modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3 id="modal-title">Novo Produto</h3>
+
+    <label>Nome *</label>
+    <input id="f-name" placeholder="Ex: Cropped Halter Brasil 🇧🇷"/>
+
+    <label>Descrição</label>
+    <textarea id="f-desc" rows="3" placeholder="Descreve o produto..."></textarea>
+
+    <label>Preço base (R$) *</label>
+    <input id="f-price" type="number" step="0.01" placeholder="100.00"/>
+
+    <label>Categoria</label>
+    <select id="f-cat">
+      <option value="">Selecciona...</option>
+      <option value="Roupas">Roupas</option>
+      <option value="Amigurumi">Amigurumi</option>
+      <option value="Bolsas">Bolsas</option>
+      <option value="Acessórios">Acessórios</option>
+      <option value="Decoração">Decoração</option>
+      <option value="Outro">Outro</option>
+    </select>
+
+    <label>URL da Imagem</label>
+    <input id="f-img" placeholder="/uploads/roupas/minha-foto.jpg"/>
+
+    <label>Stock</label>
+    <input id="f-stock" type="number" placeholder="Ex: 5"/>
+
+    <label>Ordem de exibição</label>
+    <input id="f-order" type="number" placeholder="Ex: 1"/>
+
+    <label>Tamanhos / Variantes (opcional)</label>
+    <div id="sizes-container"></div>
+    <button class="btn-outline btn-sm" onclick="addSizeRow()" style="margin-bottom:12px">+ Adicionar tamanho</button>
+
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+      <input type="checkbox" id="f-active" style="width:auto;margin:0"/> Produto activo (visível na loja)
+    </label>
+
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveProduct()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let SECRET = '';
+  let editingId = null;
+
+  // ── Auth ──────────────────────────────────────────────────────────────────
+
+  function doLogin() {
+    const val = document.getElementById('login-input').value.trim();
+    if (!val) return;
+    SECRET = val;
+    fetch('/api/admin/products', { headers: { 'X-Admin-Secret': SECRET } })
+      .then(r => {
+        if (r.status === 403) throw new Error('Senha incorrecta');
+        return r.json();
+      })
+      .then(() => {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('panel').style.display = 'block';
+        loadProducts();
+      })
+      .catch(e => {
+        document.getElementById('login-error').textContent = e.message;
+        document.getElementById('login-error').style.display = 'block';
+      });
+  }
+
+  function logout() {
+    SECRET = '';
+    document.getElementById('panel').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'block';
+    document.getElementById('login-input').value = '';
+  }
+
+  // ── Products ──────────────────────────────────────────────────────────────
+
+  function loadProducts() {
+    document.getElementById('products-container').innerHTML = '<div class="spinner">A carregar...</div>';
+    fetch('/api/admin/products', { headers: { 'X-Admin-Secret': SECRET } })
+      .then(r => r.json())
+      .then(products => {
+        document.getElementById('product-count').textContent = products.length + ' produtos';
+        renderProducts(products);
+      });
+  }
+
+  function renderProducts(products) {
+    if (!products.length) {
+      document.getElementById('products-container').innerHTML =
+        '<div style="text-align:center;padding:60px;color:#888">Sem produtos. Clica em "Novo Produto" ou faz o Seed.</div>';
+      return;
+    }
+    const html = products.map(p => `
+      <div class="product-card ${p.active ? '' : 'inactive'}">
+        <img src="${p.imageUrl || ''}" onerror="this.src=''" alt="${p.name}"/>
+        <div class="info">
+          <div class="name">${p.name}${!p.active ? '<span class="tag-inactive">oculto</span>' : ''}</div>
+          <div class="cat">${p.category || '—'}</div>
+          <div class="price">R$ ${(p.price||0).toFixed(2)}</div>
+          <div class="stock">Stock: ${p.stock ?? '—'} | Ordem: ${p.displayOrder ?? 0}</div>
+          ${p.sizes && p.sizes.length ? '<div class="stock">Tamanhos: ' + p.sizes.map(s=>s.size+'→R$'+s.price).join(', ') + '</div>' : ''}
+        </div>
+        <div class="actions">
+          <button class="btn-outline btn-sm" onclick="openEdit(${p.id})">✏️ Editar</button>
+          <button class="btn-sm ${p.active ? 'btn-danger' : 'btn-success'}" onclick="toggleProduct(${p.id})">
+            ${p.active ? '🙈 Ocultar' : '👁️ Mostrar'}
+          </button>
+          <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id}, '${p.name.replace(/'/g,"\\'")}')">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('products-container').innerHTML = `<div class="products-grid">${html}</div>`;
+  }
+
+  // ── CRUD ──────────────────────────────────────────────────────────────────
+
+  function openCreate() {
+    editingId = null;
+    clearForm();
+    document.getElementById('f-active').checked = true;
+    document.getElementById('modal-title').textContent = 'Novo Produto';
+    document.getElementById('modal').style.display = 'flex';
+  }
+
+  function openEdit(id) {
+    fetch('/api/admin/products', { headers: { 'X-Admin-Secret': SECRET } })
+      .then(r => r.json())
+      .then(products => {
+        const p = products.find(x => x.id === id);
+        if (!p) return;
+        editingId = id;
+        document.getElementById('modal-title').textContent = 'Editar Produto';
+        document.getElementById('f-name').value = p.name || '';
+        document.getElementById('f-desc').value = p.description || '';
+        document.getElementById('f-price').value = p.price || '';
+        document.getElementById('f-cat').value = p.category || '';
+        document.getElementById('f-img').value = p.imageUrl || '';
+        document.getElementById('f-stock').value = p.stock ?? '';
+        document.getElementById('f-order').value = p.displayOrder ?? 0;
+        document.getElementById('f-active').checked = p.active !== false;
+        document.getElementById('sizes-container').innerHTML = '';
+        (p.sizes || []).forEach(s => addSizeRow(s.size, s.price));
+        document.getElementById('modal').style.display = 'flex';
+      });
+  }
+
+  function saveProduct() {
+    const sizes = collectSizes();
+    const body = {
+      name: document.getElementById('f-name').value.trim(),
+      description: document.getElementById('f-desc').value.trim(),
+      price: parseFloat(document.getElementById('f-price').value) || 0,
+      category: document.getElementById('f-cat').value,
+      imageUrl: document.getElementById('f-img').value.trim(),
+      stock: document.getElementById('f-stock').value !== '' ? parseInt(document.getElementById('f-stock').value) : null,
+      displayOrder: parseInt(document.getElementById('f-order').value) || 0,
+      active: document.getElementById('f-active').checked,
+      sizes: sizes.length ? sizes : null,
+    };
+    if (!body.name) { showAlert('O nome é obrigatório!', 'error'); return; }
+
+    const url = editingId ? `/api/admin/products/${editingId}` : '/api/admin/products';
+    const method = editingId ? 'PUT' : 'POST';
+
+    fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET },
+      body: JSON.stringify(body)
+    })
+    .then(r => r.json())
+    .then(res => {
+      if (res.error) throw new Error(res.error);
+      closeModal();
+      loadProducts();
+      showAlert(editingId ? 'Produto actualizado! ✅' : 'Produto criado! ✅', 'success');
+    })
+    .catch(e => showAlert('Erro: ' + e.message, 'error'));
+  }
+
+  function toggleProduct(id) {
+    fetch(`/api/admin/products/${id}/toggle`, {
+      method: 'POST',
+      headers: { 'X-Admin-Secret': SECRET }
+    }).then(() => loadProducts());
+  }
+
+  function deleteProduct(id, name) {
+    if (!confirm(`Apagar "${name}" permanentemente?`)) return;
+    fetch(`/api/admin/products/${id}`, {
+      method: 'DELETE',
+      headers: { 'X-Admin-Secret': SECRET }
+    }).then(() => { loadProducts(); showAlert('Produto apagado.', 'success'); });
+  }
+
+  // ── Sizes ─────────────────────────────────────────────────────────────────
+
+  function addSizeRow(size='', price='') {
+    const div = document.createElement('div');
+    div.className = 'sizes-row';
+    div.innerHTML = `
+      <input placeholder="Tamanho (P, M, G...)" value="${size}" class="sz-size" style="flex:1"/>
+      <input placeholder="Preço R$" type="number" step="0.01" value="${price}" class="sz-price" style="flex:1"/>
+      <button class="btn-danger btn-sm" onclick="this.parentElement.remove()">✕</button>
+    `;
+    document.getElementById('sizes-container').appendChild(div);
+  }
+
+  function collectSizes() {
+    const rows = document.querySelectorAll('.sizes-row');
+    const result = [];
+    rows.forEach(row => {
+      const size = row.querySelector('.sz-size').value.trim();
+      const price = parseFloat(row.querySelector('.sz-price').value);
+      if (size) result.push({ size, price: price || 0 });
+    });
+    return result;
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+
+  function clearForm() {
+    ['f-name','f-desc','f-price','f-img','f-stock','f-order'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-cat').value = '';
+    document.getElementById('f-active').checked = true;
+    document.getElementById('sizes-container').innerHTML = '';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    editingId = null;
+  }
+
+  function showAlert(msg, type) {
+    const box = document.getElementById('alert-box');
+    box.className = `alert alert-${type}`;
+    box.textContent = msg;
+    box.style.display = 'block';
+    setTimeout(() => box.style.display = 'none', 4000);
+  }
+</script>
+</body>
+</html>
