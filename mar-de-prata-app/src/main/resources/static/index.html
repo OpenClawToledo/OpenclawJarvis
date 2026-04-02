@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mar de Prata – Restaurante de Frutos do Mar · Porto</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --azul: #1a3a5c;
+      --azul-light: #234d78;
+      --dourado: #c9a84c;
+      --dourado-light: #e8c76d;
+      --branco: #ffffff;
+      --cinza: #f7f7f7;
+      --texto: #2d2d2d;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--texto);
+      background: var(--branco);
+    }
+
+    /* NAV */
+    nav {
+      background: var(--azul);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .nav-logo { color: var(--dourado); font-size: 1.3rem; font-weight: 700; text-decoration: none; }
+    .nav-cta {
+      background: var(--dourado);
+      color: var(--azul);
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--dourado-light); }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--azul) 0%, var(--azul-light) 60%, #1e4d6b 100%);
+      color: var(--branco);
+      text-align: center;
+      padding: 5rem 1.5rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: var(--branco);
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+    .hero-logo {
+      font-size: clamp(3rem, 10vw, 5rem);
+      margin-bottom: 0.5rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      color: var(--dourado);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+    }
+    .hero .tagline {
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 2.5rem;
+      font-style: italic;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .btn-primary {
+      background: var(--dourado);
+      color: var(--azul);
+      padding: 1rem 2.2rem;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(201,168,76,0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-primary:hover {
+      background: var(--dourado-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(201,168,76,0.5);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--branco);
+      padding: 1rem 2.2rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-decoration: none;
+      border: 2px solid rgba(255,255,255,0.5);
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-secondary:hover {
+      border-color: var(--branco);
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    /* SECTIONS */
+    section { padding: 4rem 1.5rem; }
+    .section-title {
+      text-align: center;
+      color: var(--azul);
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .section-divider {
+      width: 60px;
+      height: 4px;
+      background: var(--dourado);
+      margin: 0 auto 2.5rem;
+      border-radius: 2px;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+
+    /* SOBRE NÓS */
+    .sobre { background: var(--cinza); }
+    .sobre p {
+      text-align: center;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #444;
+      max-width: 680px;
+      margin: 0 auto 2.5rem;
+    }
+    .sobre-icons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+    }
+    .sobre-icon-card {
+      background: var(--branco);
+      border-radius: 16px;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border-top: 4px solid var(--dourado);
+      transition: transform 0.2s;
+    }
+    .sobre-icon-card:hover { transform: translateY(-4px); }
+    .sobre-icon-card .icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+    .sobre-icon-card h3 { color: var(--azul); font-size: 1rem; font-weight: 700; }
+
+    /* COMO FUNCIONA */
+    .como-funciona { background: var(--branco); }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      position: relative;
+    }
+    .step {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      position: relative;
+    }
+    .step-number {
+      width: 56px;
+      height: 56px;
+      background: var(--azul);
+      color: var(--dourado);
+      border-radius: 50%;
+      font-size: 1.4rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      box-shadow: 0 4px 15px rgba(26,58,92,0.3);
+    }
+    .step-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+    .step h3 { color: var(--azul); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .step p { color: #666; font-size: 0.9rem; line-height: 1.6; }
+    .step-badge {
+      display: inline-block;
+      background: var(--dourado);
+      color: var(--azul);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      margin-top: 0.5rem;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--azul);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+    }
+    footer .footer-logo { color: var(--dourado); font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    footer p { font-size: 0.9rem; line-height: 1.8; }
+    footer .footer-divider { width: 40px; height: 2px; background: var(--dourado); margin: 1rem auto; border-radius: 1px; }
+    footer .copyright { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">🐟 Mar de Prata</span>
+  <a href="/menu.html?table=1" class="nav-cta">📋 Ver Menu</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-logo">🐟</div>
+  <h1>Mar de Prata</h1>
+  <p class="tagline">Restaurante de Frutos do Mar · Porto</p>
+  <div class="hero-buttons">
+    <a href="/menu.html?table=1" class="btn-primary">📋 Ver Menu</a>
+    <a href="https://wa.me/351220000000" class="btn-secondary">📞 Reservar Mesa</a>
+  </div>
+</section>
+
+<!-- SOBRE NÓS -->
+<section class="sobre">
+  <div class="container">
+    <h2 class="section-title">Sobre Nós</h2>
+    <div class="section-divider"></div>
+    <p>
+      Bem-vindos ao Mar de Prata, um restaurante familiar dedicado aos melhores frutos do mar da costa portuguesa.
+      Desde 1998, servimos pratos tradicionais com ingredientes frescos e receitas de família.
+    </p>
+    <div class="sobre-icons">
+      <div class="sobre-icon-card">
+        <div class="icon">🐟</div>
+        <h3>Frescos Diariamente</h3>
+      </div>
+      <div class="sobre-icon-card">
+        <div class="icon">👨‍🍳</div>
+        <h3>Receitas Tradicionais</h3>
+      </div>
+      <div class="sobre-icon-card">
+        <div class="icon">🏠</div>
+        <h3>Ambiente Familiar</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="como-funciona">
+  <div class="container">
+    <h2 class="section-title">Como funciona o nosso menu digital</h2>
+    <div class="section-divider"></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-icon">📱</div>
+        <h3>Encontre o QR na sua mesa</h3>
+        <p>Cada mesa tem um QR code único. Aponte a câmara e aceda ao menu instantaneamente.</p>
+        <span class="step-badge">Sem app!</span>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-icon">🍽️</div>
+        <h3>Escolha os seus pratos</h3>
+        <p>Navegue pelas categorias, veja fotos e descrições, e adicione ao carrinho.</p>
+        <span class="step-badge">Fácil</span>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-icon">✅</div>
+        <h3>Pedido enviado à cozinha</h3>
+        <p>Simples, rápido, sem espera. A cozinha recebe o pedido em segundos.</p>
+        <span class="step-badge">Rápido</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🐟 Mar de Prata</div>
+  <div class="footer-divider"></div>
+  <p>
+    Rua do Mar, 42 · Porto, Portugal<br>
+    Tel: +351 22 XXX XXXX
+  </p>
+  <p class="copyright">© 2024 Mar de Prata · Todos os direitos reservados</p>
+</footer>
+
+</body>
+</html>

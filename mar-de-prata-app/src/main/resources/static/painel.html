@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mar de Prata – Painel de Gestão</title>
+  <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7/bundles/stomp.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --azul: #1a3a5c;
+      --azul-light: #234d78;
+      --dourado: #c9a84c;
+      --dourado-light: #e8c76d;
+      --branco: #ffffff;
+      --cinza: #f4f6f9;
+      --cinza2: #e8edf3;
+      --verde: #2ecc71;
+      --laranja: #e67e22;
+      --vermelho: #e74c3c;
+      --azul-tab: #3498db;
+    }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--cinza); min-height: 100vh; }
+
+    /* ===== LOGIN OVERLAY ===== */
+    #login-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,20,35,0.92);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+    .login-card {
+      background: var(--branco);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      width: 90%; max-width: 380px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .login-logo { font-size: 3rem; margin-bottom: 0.5rem; }
+    .login-card h2 { color: var(--azul); font-size: 1.4rem; margin-bottom: 0.3rem; }
+    .login-card p { color: #888; font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .login-card input[type=password] {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid var(--cinza2);
+      border-radius: 10px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .login-card input[type=password]:focus { border-color: var(--azul); }
+    .login-btn {
+      width: 100%;
+      background: var(--azul);
+      color: var(--branco);
+      border: none;
+      padding: 0.9rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover { background: var(--azul-light); }
+    .login-error {
+      color: var(--vermelho);
+      font-size: 0.85rem;
+      margin-top: 0.7rem;
+      display: none;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60% { transform: translateX(-8px); }
+      40%,80% { transform: translateX(8px); }
+    }
+    .shake { animation: shake 0.4s; }
+
+    /* ===== HEADER ===== */
+    #app { display: none; }
+    header {
+      background: var(--azul);
+      color: var(--branco);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    header h1 { font-size: 1.2rem; color: var(--dourado); }
+    .logout-btn {
+      background: rgba(255,255,255,0.1);
+      color: var(--branco);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.2); }
+
+    /* ===== TABS ===== */
+    .tabs {
+      background: var(--azul-light);
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 3px solid var(--dourado);
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 0.9rem 1.5rem;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.65);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -3px;
+    }
+    .tab-btn:hover { color: var(--branco); background: rgba(255,255,255,0.05); }
+    .tab-btn.active { color: var(--dourado); border-bottom-color: var(--dourado); background: rgba(201,168,76,0.08); }
+
+    /* ===== CONTENT PANELS ===== */
+    .tab-panel { display: none; padding: 1.5rem; }
+    .tab-panel.active { display: block; }
+
+    /* ===== KITCHEN (TAB 1) ===== */
+    .kitchen-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .kitchen-header h2 { color: var(--azul); font-size: 1.2rem; }
+    .refresh-info { color: #888; font-size: 0.8rem; }
+    .ws-status {
+      font-size: 0.75rem; padding: 0.25rem 0.7rem;
+      border-radius: 20px; font-weight: 600;
+    }
+    .ws-status.connected { background: #d4edda; color: #155724; }
+    .ws-status.disconnected { background: #f8d7da; color: #721c24; }
+
+    .kanban {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      align-items: start;
+    }
+    .kanban-col { background: var(--cinza2); border-radius: 14px; padding: 1rem; min-height: 200px; }
+    .kanban-col-header {
+      font-weight: 800;
+      font-size: 0.85rem;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .kanban-col-header .count {
+      background: rgba(0,0,0,0.1);
+      border-radius: 20px;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.75rem;
+      margin-left: auto;
+    }
+    .order-card {
+      background: var(--branco);
+      border-radius: 10px;
+      padding: 0.9rem;
+      margin-bottom: 0.7rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-left: 4px solid var(--dourado);
+      transition: transform 0.15s;
+    }
+    .order-card:hover { transform: translateY(-2px); }
+    .order-card.new-order { border-left-color: var(--verde); animation: pulse-green 1.5s ease-in-out 3; }
+    @keyframes pulse-green {
+      0%,100% { box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+      50% { box-shadow: 0 2px 20px rgba(46,204,113,0.5); }
+    }
+    .order-mesa { font-weight: 800; color: var(--azul); font-size: 1rem; }
+    .order-time { color: #888; font-size: 0.75rem; margin-bottom: 0.6rem; }
+    .order-items { font-size: 0.82rem; color: #555; margin-bottom: 0.6rem; line-height: 1.7; }
+    .order-total { font-weight: 700; color: var(--azul); font-size: 0.9rem; margin-bottom: 0.7rem; }
+    .order-advance-btn {
+      width: 100%;
+      background: var(--azul);
+      color: var(--branco);
+      border: none;
+      padding: 0.5rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .order-advance-btn:hover { background: var(--azul-light); }
+    .order-advance-btn:disabled { background: #ccc; cursor: default; }
+
+    /* ===== REPORTS (TAB 2) ===== */
+    .reports-controls {
+      display: flex; gap: 0.5rem; align-items: center;
+      flex-wrap: wrap; margin-bottom: 1.5rem;
+    }
+    .period-btn {
+      padding: 0.5rem 1.2rem;
+      border: 2px solid var(--azul);
+      background: var(--branco);
+      color: var(--azul);
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+    }
+    .period-btn.active, .period-btn:hover {
+      background: var(--azul);
+      color: var(--branco);
+    }
+    .gerar-btn {
+      background: var(--dourado);
+      color: var(--azul);
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 25px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+      margin-left: auto;
+    }
+    .gerar-btn:hover { background: var(--dourado-light); }
+
+    .report-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .report-card {
+      background: var(--branco);
+      border-radius: 14px;
+      padding: 1.2rem;
+      border-top: 4px solid var(--dourado);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .report-card .rc-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .report-card .rc-label { color: #888; font-size: 0.8rem; margin-bottom: 0.3rem; }
+    .report-card .rc-value { color: var(--azul); font-size: 1.5rem; font-weight: 800; }
+    .report-card .rc-sub { color: #666; font-size: 0.8rem; margin-top: 0.3rem; }
+
+    .top5-table {
+      background: var(--branco);
+      border-radius: 14px;
+      padding: 1.2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border-top: 4px solid var(--dourado);
+    }
+    .top5-table h3 { color: var(--azul); font-size: 1rem; margin-bottom: 1rem; }
+    .top5-row {
+      display: grid;
+      grid-template-columns: 1.5rem 1fr auto auto;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--cinza2);
+      font-size: 0.88rem;
+    }
+    .top5-row:last-child { border-bottom: none; }
+    .top5-rank { color: var(--dourado); font-weight: 800; }
+    .top5-name { color: var(--texto); }
+    .top5-qty { color: #888; font-size: 0.8rem; }
+    .top5-rev { color: var(--azul); font-weight: 700; }
+
+    /* ===== MENU ADMIN (TAB 3) ===== */
+    .menu-form-card {
+      background: var(--branco);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border-top: 4px solid var(--dourado);
+    }
+    .menu-form-card h3 { color: var(--azul); font-size: 1rem; margin-bottom: 1rem; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form-group label { font-size: 0.8rem; color: #666; font-weight: 600; }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 0.6rem 0.8rem;
+      border: 1.5px solid var(--cinza2);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--azul);
+    }
+    .alerg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+    .alerg-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: #555; }
+    .alerg-item input[type=checkbox] { width: 15px; height: 15px; cursor: pointer; }
+    .checkbox-row { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .checkbox-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; font-weight: 600; color: var(--azul); }
+    .form-submit-btn {
+      background: var(--azul);
+      color: var(--branco);
+      border: none;
+      padding: 0.7rem 2rem;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .form-submit-btn:hover { background: var(--azul-light); }
+
+    .menu-list-card {
+      background: var(--branco);
+      border-radius: 14px;
+      padding: 1.2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .menu-list-card h3 { color: var(--azul); font-size: 1rem; margin-bottom: 1rem; }
+    .menu-item-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 0.8rem;
+      align-items: center;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--cinza2);
+      font-size: 0.88rem;
+    }
+    .menu-item-row:last-child { border-bottom: none; }
+    .mi-name { font-weight: 700; color: var(--texto); }
+    .mi-cat { color: #888; font-size: 0.75rem; }
+    .mi-price { color: var(--azul); font-weight: 700; }
+    .mi-status { font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 12px; font-weight: 600; }
+    .mi-status.active { background: #d4edda; color: #155724; }
+    .mi-status.inactive { background: #f8d7da; color: #721c24; }
+    .toggle-btn {
+      background: var(--cinza2);
+      border: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--azul);
+      transition: background 0.2s;
+    }
+    .toggle-btn:hover { background: var(--dourado); }
+
+    /* ===== QR CODES (TAB 4) ===== */
+    .qr-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .print-btn {
+      background: var(--azul);
+      color: var(--branco);
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .print-btn:hover { background: var(--azul-light); }
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .qr-card {
+      background: var(--branco);
+      border-radius: 14px;
+      padding: 1.2rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border-top: 4px solid var(--dourado);
+    }
+    .qr-card img { width: 180px; height: 180px; border-radius: 8px; }
+    .qr-card h3 { color: var(--azul); font-size: 1rem; font-weight: 800; margin-top: 0.8rem; }
+    .qr-card p { color: #888; font-size: 0.75rem; margin-top: 0.2rem; word-break: break-all; }
+
+    /* ===== PRINT ===== */
+    @media print {
+      #login-overlay, header, .tabs,
+      #tab-cozinha, #tab-relatorios, #tab-menu,
+      .qr-header { display: none !important; }
+      #tab-qr { display: block !important; padding: 0; }
+      .qr-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+      }
+      .qr-card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+    }
+
+    /* ===== MISC ===== */
+    .empty-col { color: #bbb; font-size: 0.85rem; text-align: center; padding: 1rem 0; }
+    .loading { color: #888; font-size: 0.9rem; text-align: center; padding: 2rem; }
+    .msg-success { color: #155724; background: #d4edda; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; display: inline-block; margin-top: 0.5rem; }
+    .msg-error { color: #721c24; background: #f8d7da; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; display: inline-block; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN OVERLAY ===== -->
+<div id="login-overlay">
+  <div class="login-card" id="login-card">
+    <div class="login-logo">🐟</div>
+    <h2>Mar de Prata</h2>
+    <p>Acesso Restrito — Painel de Gestão</p>
+    <input type="password" id="login-pw" placeholder="Palavra-passe" autocomplete="current-password">
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="login-error">Senha incorrecta. Tente novamente.</div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app">
+  <header>
+    <h1>🐟 Mar de Prata — Painel de Gestão</h1>
+    <div style="display:flex;align-items:center;gap:8px;position:relative">
+      <button class="logout-btn" id="adminLangBtn" onclick="toggleAdminLang()" style="background:rgba(255,255,255,0.08);border:1px solid rgba(201,168,76,0.4);color:#c9a84c;">🌐 PT</button>
+      <div id="adminLangMenu" style="display:none;position:absolute;top:38px;right:0;background:#1a3a5c;border:1px solid #c9a84c55;border-radius:10px;z-index:900;min-width:140px;box-shadow:0 8px 24px #00000066;overflow:hidden;">
+        <div class="admin-lang-opt" onclick="setAdminLang('pt')" id="alopt-pt" style="padding:10px 14px;cursor:pointer;font-size:0.88rem;color:#ccc;">🇵🇹 Português</div>
+        <div class="admin-lang-opt" onclick="setAdminLang('br')" id="alopt-br" style="padding:10px 14px;cursor:pointer;font-size:0.88rem;color:#ccc;">🇧🇷 Português BR</div>
+        <div class="admin-lang-opt" onclick="setAdminLang('zh')" id="alopt-zh" style="padding:10px 14px;cursor:pointer;font-size:0.88rem;color:#ccc;">🇨🇳 中文</div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Sair 🔓</button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="cozinha">👨‍🍳 Cozinha</button>
+    <button class="tab-btn" data-tab="relatorios">📊 Relatórios</button>
+    <button class="tab-btn" data-tab="menu">🍽️ Menu</button>
+    <button class="tab-btn" data-tab="qr">📱 QR Codes</button>
+  </div>
+
+  <!-- TAB: COZINHA -->
+  <div class="tab-panel active" id="tab-cozinha">
+    <div class="kitchen-header">
+      <h2>Pedidos em Tempo Real</h2>
+      <span class="ws-status disconnected" id="ws-status">⚡ Conectando...</span>
+      <span class="refresh-info">Auto-refresh: 30s</span>
+    </div>
+    <div class="kanban" id="kanban">
+      <div class="kanban-col" id="col-PENDING">
+        <div class="kanban-col-header">🟡 PENDENTES <span class="count" id="count-PENDING">0</span></div>
+        <div class="col-cards" id="cards-PENDING"></div>
+      </div>
+      <div class="kanban-col" id="col-CONFIRMED">
+        <div class="kanban-col-header">🔵 CONFIRMADO <span class="count" id="count-CONFIRMED">0</span></div>
+        <div class="col-cards" id="cards-CONFIRMED"></div>
+      </div>
+      <div class="kanban-col" id="col-PREPARING">
+        <div class="kanban-col-header">🟠 EM PREPARAÇÃO <span class="count" id="count-PREPARING">0</span></div>
+        <div class="col-cards" id="cards-PREPARING"></div>
+      </div>
+      <div class="kanban-col" id="col-READY">
+        <div class="kanban-col-header">🟢 PRONTO <span class="count" id="count-READY">0</span></div>
+        <div class="col-cards" id="cards-READY"></div>
+      </div>
+      <div class="kanban-col" id="col-SERVED">
+        <div class="kanban-col-header">✅ SERVIDO <span class="count" id="count-SERVED">0</span></div>
+        <div class="col-cards" id="cards-SERVED"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: RELATÓRIOS -->
+  <div class="tab-panel" id="tab-relatorios">
+    <div class="reports-controls">
+      <button class="period-btn active" data-period="day">Hoje</button>
+      <button class="period-btn" data-period="week">Esta Semana</button>
+      <button class="period-btn" data-period="month">Este Mês</button>
+      <button class="gerar-btn" onclick="loadReport()">📊 Gerar Relatório</button>
+    </div>
+    <div id="report-content">
+      <div class="loading">Clique em "Gerar Relatório" para carregar dados.</div>
+    </div>
+  </div>
+
+  <!-- TAB: MENU -->
+  <div class="tab-panel" id="tab-menu">
+    <!-- Formulário novo prato -->
+    <div class="menu-form-card">
+      <h3>➕ Adicionar Novo Prato</h3>
+      <div class="form-grid">
+        <div class="form-group" style="grid-column: span 2;">
+          <label>Nome *</label>
+          <input type="text" id="mi-name" placeholder="Ex: Bacalhau à Brás">
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+          <label>Descrição</label>
+          <textarea id="mi-desc" rows="2" placeholder="Descrição do prato..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Preço (€) *</label>
+          <input type="number" id="mi-price" step="0.01" min="0" placeholder="12.50">
+        </div>
+        <div class="form-group">
+          <label>Categoria *</label>
+          <select id="mi-cat">
+            <option value="Entradas">Entradas</option>
+            <option value="Sopas">Sopas</option>
+            <option value="Pratos">Pratos</option>
+            <option value="Sobremesas">Sobremesas</option>
+            <option value="Bebidas">Bebidas</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Ordem de exibição</label>
+          <input type="number" id="mi-order" value="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>URL da imagem</label>
+          <input type="text" id="mi-img" placeholder="https://...">
+        </div>
+      </div>
+
+      <label style="font-size:0.8rem;color:#666;font-weight:600;display:block;margin-bottom:0.5rem;">Alergénios</label>
+      <div class="alerg-grid">
+        <label class="alerg-item"><input type="checkbox" id="alg-gluten"> Glúten</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-crustaceans"> Crustáceos</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-eggs"> Ovos</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-fish"> Peixe</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-peanuts"> Amendoins</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-soy"> Soja</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-milk"> Leite</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-nuts"> Frutos secos</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-celery"> Aipo</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-mustard"> Mostarda</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-seeds"> Sementes sésamo</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-sulphites"> Sulfitos</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-lupin"> Tremoços</label>
+        <label class="alerg-item"><input type="checkbox" id="alg-molluscs"> Moluscos</label>
+      </div>
+
+      <div class="checkbox-row">
+        <label class="checkbox-item"><input type="checkbox" id="mi-featured"> ⭐ Destaque</label>
+        <label class="checkbox-item"><input type="checkbox" id="mi-spicy"> 🌶️ Picante</label>
+        <label class="checkbox-item"><input type="checkbox" id="mi-vegetarian"> 🥦 Vegetariano</label>
+        <label class="checkbox-item"><input type="checkbox" id="mi-vegan"> 🌱 Vegan</label>
+      </div>
+
+      <button class="form-submit-btn" onclick="submitNewItem()">💾 Guardar Prato</button>
+      <span id="menu-form-msg"></span>
+    </div>
+
+    <!-- Lista de pratos -->
+    <div class="menu-list-card">
+      <h3>📋 Pratos Actuais</h3>
+      <div id="menu-list"><div class="loading">A carregar...</div></div>
+    </div>
+  </div>
+
+  <!-- TAB: QR CODES -->
+  <div class="tab-panel" id="tab-qr">
+    <div class="qr-header">
+      <h2 style="color:var(--azul)">QR Codes por Mesa</h2>
+      <button class="print-btn" onclick="window.print()">🖨️ Imprimir Todos</button>
+    </div>
+    <div class="qr-grid" id="qr-grid"></div>
+  </div>
+</div>
+
+<script>
+// ===== CONSTANTES =====
+const ADMIN_SECRET = 'mar-de-prata-admin-secret';
+const NEXT_STATUS = {
+  PENDING: 'CONFIRMED',
+  CONFIRMED: 'PREPARING',
+  PREPARING: 'READY',
+  READY: 'SERVED',
+  SERVED: null
+};
+function getStatusLabel(status) {
+  return (AT && AT.btnLabels && AT.btnLabels[status]) || status;
+}
+
+// ===== LOGIN =====
+function checkSession() {
+  if (sessionStorage.getItem('mdp-auth') === '1') {
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  }
+}
+
+function doLogin() {
+  const pw = document.getElementById('login-pw').value;
+  if (pw === ADMIN_SECRET) {
+    sessionStorage.setItem('mdp-auth', '1');
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  } else {
+    const card = document.getElementById('login-card');
+    const err = document.getElementById('login-error');
+    err.style.display = 'block';
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+  }
+}
+
+document.getElementById('login-pw').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+function logout() {
+  sessionStorage.removeItem('mdp-auth');
+  location.reload();
+}
+
+// ===== TABS =====
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+
+    if (btn.dataset.tab === 'menu') loadMenuList();
+    if (btn.dataset.tab === 'qr') renderQRCodes();
+  });
+});
+
+// ===== AUDIO BEEP =====
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.5);
+  } catch(e) {}
+}
+
+// ===== KITCHEN / KANBAN =====
+let knownOrders = new Set();
+let stompClient = null;
+
+function formatTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+}
+
+function buildOrderCard(order, isNew) {
+  const next = NEXT_STATUS[order.status];
+  const btnLabel = getStatusLabel(order.status) || '';
+  const items = (order.items || []).map(i =>
+    `<span>• ${i.quantity}x ${i.menuItem ? i.menuItem.name : 'Item'}</span>`
+  ).join('<br>');
+
+  return `
+    <div class="order-card${isNew ? ' new-order' : ''}" id="order-${order.id}">
+      <div class="order-mesa">Mesa ${order.tableNumber}</div>
+      <div class="order-time">${formatTime(order.createdAt)}</div>
+      <div class="order-items">${items || '<em>Sem itens</em>'}</div>
+      <div class="order-total">Total: €${(order.totalPrice || 0).toFixed(2)}</div>
+      <button class="order-advance-btn"
+        onclick="advanceOrder(${order.id}, '${next}')"
+        ${!next ? 'disabled' : ''}>
+        ${btnLabel}
+      </button>
+    </div>`;
+}
+
+function renderKanban(orders) {
+  const STATUSES = ['PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'SERVED'];
+  const grouped = {};
+  STATUSES.forEach(s => grouped[s] = []);
+  orders.forEach(o => { if (grouped[o.status]) grouped[o.status].push(o); });
+
+  STATUSES.forEach(status => {
+    const container = document.getElementById('cards-' + status);
+    const count = document.getElementById('count-' + status);
+    const list = grouped[status];
+
+    count.textContent = list.length;
+    container.innerHTML = '';
+
+    if (list.length === 0) {
+      container.innerHTML = '<div class="empty-col">Sem pedidos</div>';
+      return;
+    }
+
+    list.forEach(o => {
+      const isNew = !knownOrders.has(o.id);
+      if (isNew) {
+        knownOrders.add(o.id);
+        if (status === 'PENDING') playBeep();
+      }
+      container.innerHTML += buildOrderCard(o, isNew);
+    });
+  });
+}
+
+async function loadOrders() {
+  try {
+    const r = await fetch('/api/orders', { headers: { 'X-Admin-Secret': ADMIN_SECRET } });
+    if (r.ok) {
+      const orders = await r.json();
+      renderKanban(orders);
+    }
+  } catch(e) { console.warn('Erro ao carregar pedidos:', e); }
+}
+
+async function advanceOrder(id, nextStatus) {
+  if (!nextStatus) return;
+  const btn = document.querySelector(`#order-${id} .order-advance-btn`);
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+  try {
+    await fetch(`/api/orders/${id}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Secret': ADMIN_SECRET
+      },
+      body: JSON.stringify({ status: nextStatus })
+    });
+    await loadOrders();
+  } catch(e) {
+    console.warn('Erro ao avançar:', e);
+    if (btn) { btn.disabled = false; btn.textContent = 'Erro'; }
+  }
+}
+
+function initWebSocket() {
+  try {
+    const wsUrl = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`;
+    stompClient = new StompJs.Client({
+      brokerURL: wsUrl,
+      reconnectDelay: 5000,
+      onConnect: () => {
+        document.getElementById('ws-status').textContent = '⚡ Conectado (WS)';
+        document.getElementById('ws-status').className = 'ws-status connected';
+        stompClient.subscribe('/topic/kitchen', msg => {
+          try {
+            const data = JSON.parse(msg.body);
+            if (data.orders) renderKanban(data.orders);
+            else loadOrders();
+          } catch(e) { loadOrders(); }
+        });
+      },
+      onDisconnect: () => {
+        document.getElementById('ws-status').textContent = '🔴 Desconectado (WS)';
+        document.getElementById('ws-status').className = 'ws-status disconnected';
+      },
+      onStompError: () => {
+        document.getElementById('ws-status').textContent = '🔴 Erro WS';
+        document.getElementById('ws-status').className = 'ws-status disconnected';
+      }
+    });
+    stompClient.activate();
+  } catch(e) { console.warn('WebSocket init failed:', e); }
+}
+
+// ===== REPORTS =====
+let selectedPeriod = 'day';
+
+document.querySelectorAll('.period-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedPeriod = btn.dataset.period;
+  });
+});
+
+async function loadReport() {
+  const el = document.getElementById('report-content');
+  el.innerHTML = '<div class="loading">A gerar relatório...</div>';
+  try {
+    const r = await fetch(`/api/reports?period=${selectedPeriod}`, {
+      headers: { 'X-Admin-Secret': ADMIN_SECRET }
+    });
+    if (!r.ok) throw new Error('Erro ' + r.status);
+    const d = await r.json();
+    renderReport(d);
+  } catch(e) {
+    el.innerHTML = `<div class="msg-error">Erro ao carregar relatório: ${e.message}</div>`;
+  }
+}
+
+function renderReport(d) {
+  const periodLabel = { day: 'Hoje', week: 'Esta Semana', month: 'Este Mês' }[d.period] || d.period;
+  const top5Html = (d.top5Items || []).map((item, i) => `
+    <div class="top5-row">
+      <span class="top5-rank">#${i+1}</span>
+      <span class="top5-name">${item.name}</span>
+      <span class="top5-qty">${item.quantity}x</span>
+      <span class="top5-rev">€${(item.revenue || 0).toFixed(2)}</span>
+    </div>`).join('') || '<div class="empty-col">Sem dados</div>';
+
+  document.getElementById('report-content').innerHTML = `
+    <div class="report-cards">
+      <div class="report-card">
+        <div class="rc-icon">💰</div>
+        <div class="rc-label">Receita Total (${periodLabel})</div>
+        <div class="rc-value">€${(d.totalRevenue || 0).toFixed(2)}</div>
+      </div>
+      <div class="report-card">
+        <div class="rc-icon">📋</div>
+        <div class="rc-label">Total de Pedidos</div>
+        <div class="rc-value">${d.totalOrders || 0}</div>
+        <div class="rc-sub">✅ ${d.served} servidos · ❌ ${d.cancelled} cancelados · ⏳ ${d.inProgress} em curso</div>
+      </div>
+      <div class="report-card">
+        <div class="rc-icon">📈</div>
+        <div class="rc-label">Média por Pedido</div>
+        <div class="rc-value">€${(d.avgOrderValue || 0).toFixed(2)}</div>
+      </div>
+    </div>
+    <div class="top5-table">
+      <h3>🍽️ Top 5 Pratos Mais Pedidos</h3>
+      ${top5Html}
+    </div>`;
+}
+
+// ===== MENU ADMIN =====
+async function loadMenuList() {
+  const el = document.getElementById('menu-list');
+  el.innerHTML = '<div class="loading">A carregar...</div>';
+  try {
+    const r = await fetch('/api/menu/list');
+    if (!r.ok) throw new Error('Erro');
+    const items = await r.json();
+    if (!items.length) { el.innerHTML = '<div class="empty-col">Sem pratos.</div>'; return; }
+    el.innerHTML = items.map(i => `
+      <div class="menu-item-row">
+        <div>
+          <div class="mi-name">${i.name}</div>
+          <div class="mi-cat">${i.category}</div>
+        </div>
+        <div class="mi-price">€${(i.price || 0).toFixed(2)}</div>
+        <span class="mi-status ${i.active ? 'active' : 'inactive'}">${i.active ? 'Activo' : 'Inactivo'}</span>
+        <button class="toggle-btn" onclick="toggleItem(${i.id})">${i.active ? '⏸ Desactivar' : '▶ Activar'}</button>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = '<div class="msg-error">Erro ao carregar menu.</div>';
+  }
+}
+
+async function toggleItem(id) {
+  try {
+    await fetch(`/api/menu/admin/${id}/toggle`, {
+      method: 'PUT',
+      headers: { 'X-Admin-Secret': ADMIN_SECRET }
+    });
+    loadMenuList();
+  } catch(e) { alert('Erro ao alternar estado.'); }
+}
+
+async function submitNewItem() {
+  const msgEl = document.getElementById('menu-form-msg');
+  const body = {
+    name: document.getElementById('mi-name').value.trim(),
+    description: document.getElementById('mi-desc').value.trim(),
+    price: parseFloat(document.getElementById('mi-price').value) || 0,
+    category: document.getElementById('mi-cat').value,
+    displayOrder: parseInt(document.getElementById('mi-order').value) || 0,
+    imageUrl: document.getElementById('mi-img').value.trim() || null,
+    hasGluten: document.getElementById('alg-gluten').checked,
+    hasCrustaceans: document.getElementById('alg-crustaceans').checked,
+    hasEggs: document.getElementById('alg-eggs').checked,
+    hasFish: document.getElementById('alg-fish').checked,
+    hasPeanuts: document.getElementById('alg-peanuts').checked,
+    hasSoy: document.getElementById('alg-soy').checked,
+    hasMilk: document.getElementById('alg-milk').checked,
+    hasNuts: document.getElementById('alg-nuts').checked,
+    hasCelery: document.getElementById('alg-celery').checked,
+    hasMustard: document.getElementById('alg-mustard').checked,
+    hasSeeds: document.getElementById('alg-seeds').checked,
+    hasSulphites: document.getElementById('alg-sulphites').checked,
+    hasLupin: document.getElementById('alg-lupin').checked,
+    hasMolluscs: document.getElementById('alg-molluscs').checked,
+    featured: document.getElementById('mi-featured').checked,
+    spicy: document.getElementById('mi-spicy').checked,
+    vegetarian: document.getElementById('mi-vegetarian').checked,
+    vegan: document.getElementById('mi-vegan').checked,
+    active: true
+  };
+
+  if (!body.name) { msgEl.innerHTML = '<span class="msg-error">Nome é obrigatório.</span>'; return; }
+
+  msgEl.innerHTML = '';
+  try {
+    const r = await fetch('/api/menu/admin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Secret': ADMIN_SECRET
+      },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) throw new Error('Erro ' + r.status);
+    msgEl.innerHTML = '<span class="msg-success">✅ Prato guardado!</span>';
+    document.getElementById('mi-name').value = '';
+    document.getElementById('mi-desc').value = '';
+    document.getElementById('mi-price').value = '';
+    loadMenuList();
+  } catch(e) {
+    msgEl.innerHTML = `<span class="msg-error">Erro: ${e.message}</span>`;
+  }
+}
+
+// ===== QR CODES =====
+function renderQRCodes() {
+  const baseUrl = window.location.origin;
+  const grid = document.getElementById('qr-grid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= 10; i++) {
+    const menuUrl = `${baseUrl}/menu.html?table=${i}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(menuUrl)}&size=180x180`;
+    grid.innerHTML += `
+      <div class="qr-card">
+        <img src="${qrUrl}" alt="QR Mesa ${i}" loading="lazy">
+        <h3>Mesa ${i}</h3>
+        <p>${menuUrl}</p>
+      </div>`;
+  }
+}
+
+// ===== INIT =====
+function initApp() {
+  loadOrders();
+  initWebSocket();
+  // Auto-refresh 30s fallback
+  setInterval(loadOrders, 30000);
+}
+
+// ===== ADMIN i18n =====
+const ADMIN_TRANSLATIONS = {
+  pt: {
+    label: '🌐 PT',
+    tabs: { cozinha:'👨‍🍳 Cozinha', relatorios:'📊 Relatórios', menu:'🍽️ Menu', qr:'📱 QR Codes' },
+    colHeaders: { PENDING:'🟡 PENDENTES', CONFIRMED:'🔵 CONFIRMADO', PREPARING:'🟠 EM PREPARAÇÃO', READY:'🟢 PRONTO', SERVED:'✅ SERVIDO' },
+    btnLabels: { PENDING:'✔ Confirmar', CONFIRMED:'🍳 Preparar', PREPARING:'✅ Pronto', READY:'🍽️ Servido' }
+  },
+  br: {
+    label: '🌐 BR',
+    tabs: { cozinha:'👨‍🍳 Cozinha', relatorios:'📊 Relatórios', menu:'🍽️ Cardápio', qr:'📱 QR Codes' },
+    colHeaders: { PENDING:'🟡 AGUARDANDO', CONFIRMED:'🔵 CONFIRMADO', PREPARING:'🟠 PREPARANDO', READY:'🟢 PRONTO', SERVED:'✅ SERVIDO' },
+    btnLabels: { PENDING:'✔ Confirmar', CONFIRMED:'🍳 Preparar', PREPARING:'✅ Pronto', READY:'🍽️ Servido' }
+  },
+  zh: {
+    label: '🌐 中文',
+    tabs: { cozinha:'👨‍🍳 厨房', relatorios:'📊 报表', menu:'🍽️ 菜单管理', qr:'📱 二维码' },
+    colHeaders: { PENDING:'🟡 待确认', CONFIRMED:'🔵 已确认', PREPARING:'🟠 制作中', READY:'🟢 已出餐', SERVED:'✅ 已上桌' },
+    btnLabels: { PENDING:'✔ 确认', CONFIRMED:'🍳 开始制作', PREPARING:'✅ 已完成', READY:'🍽️ 已上桌' }
+  }
+};
+
+let adminLang = localStorage.getItem('mdp_admin_lang') || 'pt';
+let AT = ADMIN_TRANSLATIONS[adminLang];
+
+// NEXT_STATUS e getStatusLabel definidos acima
+
+function toggleAdminLang() {
+  const menu = document.getElementById('adminLangMenu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+function setAdminLang(lang) {
+  adminLang = lang;
+  AT = ADMIN_TRANSLATIONS[lang];
+  localStorage.setItem('mdp_admin_lang', lang);
+  document.getElementById('adminLangBtn').textContent = AT.label;
+  document.getElementById('adminLangMenu').style.display = 'none';
+  ['pt','br','zh'].forEach(l => {
+    const opt = document.getElementById('alopt-' + l);
+    if (opt) opt.style.color = l === lang ? '#c9a84c' : '#ccc';
+  });
+  // Update tab labels
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    const key = btn.getAttribute('data-tab');
+    if (AT.tabs[key]) btn.textContent = AT.tabs[key];
+  });
+  // Update kanban col headers
+  Object.entries(AT.colHeaders).forEach(([status, label]) => {
+    const col = document.getElementById('col-' + status);
+    if (col) {
+      const h = col.querySelector('.kanban-col-header');
+      if (h) h.childNodes[0].textContent = label + ' ';
+    }
+  });
+  loadOrders();
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#adminLangBtn') && !e.target.closest('#adminLangMenu')) {
+    const m = document.getElementById('adminLangMenu');
+    if (m) m.style.display = 'none';
+  }
+});
+
+// Verificar sessão ao arrancar
+checkSession();
+</script>
+</body>
+</html>

@@ -1,7 +1,9 @@
 package com.gabinete.app.controller;
 
+import com.gabinete.app.config.AdminSecretValidator;
 import com.gabinete.app.model.ContactMessage;
 import com.gabinete.app.repository.ContactMessageRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,43 +15,41 @@ import java.util.Map;
 @RequestMapping("/api/contact")
 public class ContactController {
 
-    @Autowired
-    private ContactMessageRepository contactMessageRepository;
+    @Autowired private ContactMessageRepository contactMessageRepository;
+    @Autowired private AdminSecretValidator adminSecret;
 
-    // POST /api/contact — formulário de contacto
+    // POST /api/contact — formulário público
     @PostMapping
-    public ResponseEntity<?> submitContact(@RequestBody ContactMessage message) {
+    public ResponseEntity<?> submitContact(@Valid @RequestBody ContactMessage message) {
         try {
-            ContactMessage saved = contactMessageRepository.save(message);
+            contactMessageRepository.save(message);
             return ResponseEntity.ok(Map.of(
                 "success", true,
                 "message", "Mensagem recebida. Entraremos em contacto brevemente."
             ));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
+            // Nunca expor detalhes internos
+            return ResponseEntity.internalServerError()
+                .body(Map.of("error", "Erro interno. Tente novamente."));
         }
     }
 
-    // GET /api/contact (admin) — listar mensagens
+    // GET /api/contact — admin: listar mensagens
     @GetMapping
-    public ResponseEntity<List<ContactMessage>> getMessages(
-            @RequestHeader("X-Admin-Secret") String secret) {
-        String adminSecret = System.getenv().getOrDefault("ADMIN_SECRET", "gabinete-admin-secret");
-        if (!adminSecret.equals(secret)) {
-            return ResponseEntity.status(403).build();
-        }
+    public ResponseEntity<?> getMessages(
+            @RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
+        if (!adminSecret.isValid(secret))
+            return ResponseEntity.status(403).body(Map.of("error", "Acesso negado"));
         return ResponseEntity.ok(contactMessageRepository.findAllByOrderByCreatedAtDesc());
     }
 
-    // PUT /api/contact/{id}/read (admin)
+    // PUT /api/contact/{id}/read — admin: marcar como lida
     @PutMapping("/{id}/read")
     public ResponseEntity<?> markRead(
             @PathVariable Long id,
-            @RequestHeader("X-Admin-Secret") String secret) {
-        String adminSecret = System.getenv().getOrDefault("ADMIN_SECRET", "gabinete-admin-secret");
-        if (!adminSecret.equals(secret)) {
-            return ResponseEntity.status(403).build();
-        }
+            @RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
+        if (!adminSecret.isValid(secret))
+            return ResponseEntity.status(403).body(Map.of("error", "Acesso negado"));
         return contactMessageRepository.findById(id).map(msg -> {
             msg.setRead(true);
             contactMessageRepository.save(msg);

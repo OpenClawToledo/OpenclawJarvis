@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -77,6 +78,20 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
         }
+    }
+
+    // GET /api/orders — todos os pedidos activos (para cozinha e painel ADM)
+    @GetMapping
+    public ResponseEntity<?> getAllOrders(@RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
+        String adminSecret = System.getenv().getOrDefault("ADMIN_SECRET", "mar-de-prata-admin-secret");
+        if (secret == null || !adminSecret.equals(secret)) {
+            return ResponseEntity.status(403).body(Map.of("error", "Acesso negado"));
+        }
+        // Retorna todos exceto CANCELLED, ordenados do mais recente
+        List<TableOrder> all = orderRepository.findAllByOrderByCreatedAtDesc().stream()
+                .filter(o -> o.getStatus() != TableOrder.Status.CANCELLED)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(all);
     }
 
     // GET /api/orders/table/{tableNumber} — pedidos activos de uma mesa

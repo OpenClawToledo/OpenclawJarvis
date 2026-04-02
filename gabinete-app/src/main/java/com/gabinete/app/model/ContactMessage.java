@@ -1,6 +1,7 @@
 package com.gabinete.app.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,20 +12,34 @@ public class ContactMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Nome obrigatório")
+    @Size(max = 120, message = "Nome demasiado longo")
     @Column(nullable = false)
     private String name;
 
+    @NotBlank(message = "Email obrigatório")
+    @Email(message = "Email inválido")
+    @Size(max = 200, message = "Email demasiado longo")
     @Column(nullable = false)
     private String email;
 
+    @Size(max = 30, message = "Telefone demasiado longo")
+    @Pattern(regexp = "^[+\\d\\s\\-()]*$", message = "Telefone inválido")
     private String phone;
+
+    @Size(max = 150, message = "Empresa demasiado longa")
     private String company;
 
+    @NotBlank(message = "Mensagem obrigatória")
+    @Size(min = 10, max = 2000, message = "Mensagem entre 10 e 2000 caracteres")
     @Column(columnDefinition = "TEXT", nullable = false)
     private String message;
 
-    private String service; // qual serviço tem interesse
-    private String lang = "pt"; // pt ou zh
+    @Size(max = 80)
+    private String service;
+
+    @Pattern(regexp = "^(pt|zh|en)$", message = "Idioma inválido")
+    private String lang = "pt";
 
     private Boolean read = false;
     private Boolean replied = false;
@@ -39,15 +54,15 @@ public class ContactMessage {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) { this.name = name != null ? name.strip() : null; }
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) { this.email = email != null ? email.strip().toLowerCase() : null; }
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
     public String getCompany() { return company; }
-    public void setCompany(String company) { this.company = company; }
+    public void setCompany(String company) { this.company = company != null ? company.strip() : null; }
     public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
+    public void setMessage(String message) { this.message = message != null ? message.strip() : null; }
     public String getService() { return service; }
     public void setService(String service) { this.service = service; }
     public String getLang() { return lang; }

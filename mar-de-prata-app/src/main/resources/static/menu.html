@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mar de Prata — Menu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+  :root {
+    --vermelho: #9b1c1c;
+    --vermelho-escuro: #6b0f0f;
+    --vermelho-vivo: #c0392b;
+    --ouro: #d4a017;
+    --ouro-claro: #f0c040;
+    --ouro-brilho: #ffe082;
+    --fundo: #1a0600;
+    --fundo2: #2a0a00;
+    --fundo3: #3a1200;
+    --fundo-card: #2d0e0e;
+    --texto: #f5e6d3;
+    --texto2: #c9a87a;
+    --borda: rgba(212,160,23,0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Serif SC', 'Segoe UI', serif;
+    background: var(--fundo);
+    color: var(--texto);
+    padding-bottom: 100px;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(155,28,28,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(155,28,28,0.12) 0%, transparent 60%);
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, var(--vermelho-escuro) 0%, var(--vermelho) 100%);
+    padding: 14px 16px;
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 2px solid var(--ouro);
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    box-shadow: 0 4px 20px rgba(155,28,28,0.5);
+  }
+  /* Padrão decorativo no header */
+  header::before {
+    content: '❖ ✦ ❖';
+    position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%);
+    font-size: 0.55rem; color: var(--ouro); letter-spacing: 8px; opacity: 0.6;
+  }
+  .header-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .header-logo { font-size: 1.6rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+  .header-title { display: flex; flex-direction: column; }
+  header h1 { font-size: 1.2rem; color: var(--ouro-claro); font-weight: 700; letter-spacing: 1px; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+  .header-sub { font-size: 0.65rem; color: rgba(240,192,64,0.7); letter-spacing: 2px; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .table-badge {
+    background: linear-gradient(135deg, var(--ouro) 0%, var(--ouro-claro) 100%);
+    color: var(--vermelho-escuro); padding: 5px 13px; border-radius: 20px;
+    font-weight: 800; font-size: 0.82rem; white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(212,160,23,0.4);
+  }
+
+  /* ===== LANGUAGE ===== */
+  .lang-btn {
+    background: rgba(212,160,23,0.12); border: 1px solid rgba(212,160,23,0.45);
+    color: var(--ouro-claro); padding: 5px 10px; border-radius: 20px; cursor: pointer;
+    font-size: 0.78rem; font-weight: 600; white-space: nowrap; transition: all 0.2s;
+  }
+  .lang-btn:hover { background: rgba(212,160,23,0.22); }
+  .lang-menu {
+    position: absolute; top: 60px; right: 12px;
+    background: linear-gradient(160deg, #3a0e0e, #2a0a00);
+    border: 1px solid var(--ouro); border-radius: 10px; overflow: hidden;
+    z-index: 500; min-width: 140px; display: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(212,160,23,0.1);
+  }
+  .lang-menu.open { display: block; }
+  .lang-option {
+    padding: 11px 16px; cursor: pointer; font-size: 0.88rem; color: var(--texto2);
+    transition: background 0.15s; border-bottom: 1px solid rgba(212,160,23,0.1);
+  }
+  .lang-option:last-child { border-bottom: none; }
+  .lang-option:hover { background: rgba(212,160,23,0.1); color: var(--texto); }
+  .lang-option.active { color: var(--ouro-claro); font-weight: 700; }
+
+  /* ===== TABS ===== */
+  .tabs {
+    display: flex; overflow-x: auto;
+    background: var(--fundo2);
+    border-bottom: 1px solid var(--borda);
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 11px 16px; white-space: nowrap; cursor: pointer;
+    color: var(--texto2); font-size: 0.85rem;
+    border-bottom: 3px solid transparent; transition: all .2s;
+  }
+  .tab.active { color: var(--ouro-claro); border-bottom-color: var(--ouro); font-weight: 700; }
+  .tab:hover { color: var(--ouro-brilho); }
+
+  /* ===== MENU CONTENT ===== */
+  .menu-section { padding: 16px; max-width: 700px; margin: 0 auto; }
+  .section-title {
+    font-size: 1.15rem; color: var(--ouro-claro); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--borda);
+  }
+  .section-title::before { content: '◆'; color: var(--vermelho-vivo); font-size: 0.8rem; }
+
+  .item-card {
+    background: var(--fundo-card);
+    border: 1px solid var(--borda);
+    border-radius: 12px; padding: 14px; margin-bottom: 12px;
+    transition: all .2s; position: relative; overflow: hidden;
+  }
+  .item-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(212,160,23,0.3), transparent);
+  }
+  .item-card:hover { border-color: rgba(212,160,23,0.5); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(155,28,28,0.2); }
+  .item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .item-info { flex: 1; }
+  .item-name { font-size: 1rem; font-weight: 700; color: var(--texto); margin-bottom: 4px; letter-spacing: 0.3px; }
+  .item-desc { font-size: 0.82rem; color: var(--texto2); margin-bottom: 6px; line-height: 1.5; }
+  .item-price { font-size: 1.2rem; color: var(--ouro-claro); font-weight: 800; white-space: nowrap; text-shadow: 0 1px 4px rgba(212,160,23,0.3); }
+  .allergens { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .allergen { font-size: 0.7rem; background: rgba(155,28,28,0.2); border: 1px solid rgba(212,160,23,0.2); border-radius: 4px; padding: 2px 6px; color: var(--texto2); }
+  .badge { font-size: 0.68rem; padding: 2px 8px; border-radius: 10px; margin-left: 5px; vertical-align: middle; }
+  .badge-featured { background: rgba(212,160,23,0.15); border: 1px solid rgba(212,160,23,0.5); color: var(--ouro-claro); }
+  .badge-veg { background: rgba(46,125,50,0.2); border: 1px solid rgba(76,175,80,0.4); color: #81c784; }
+
+  /* ===== QTY ===== */
+  .qty-controls { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .qty-btn {
+    background: rgba(155,28,28,0.3); border: 1px solid rgba(212,160,23,0.3);
+    color: var(--texto); width: 32px; height: 32px; border-radius: 8px;
+    font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+  }
+  .qty-btn:hover { background: rgba(155,28,28,0.5); border-color: var(--ouro); }
+  .qty-btn.add {
+    background: linear-gradient(135deg, var(--vermelho) 0%, var(--vermelho-vivo) 100%);
+    border-color: var(--vermelho-vivo); font-weight: bold;
+    box-shadow: 0 2px 8px rgba(192,57,43,0.4);
+  }
+  .qty-btn.add:hover { background: linear-gradient(135deg, var(--vermelho-vivo), #e74c3c); }
+  .qty-num { font-size: 1rem; font-weight: 800; min-width: 24px; text-align: center; color: var(--ouro-claro); }
+
+  /* ===== CART FAB ===== */
+  #cartFab {
+    position: fixed; bottom: 24px; right: 20px;
+    background: linear-gradient(135deg, var(--vermelho) 0%, var(--vermelho-vivo) 100%);
+    color: var(--ouro-brilho); border: 1px solid var(--ouro);
+    border-radius: 50px; padding: 13px 20px; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; box-shadow: 0 4px 24px rgba(155,28,28,0.6);
+    display: flex; align-items: center; gap: 8px; z-index: 200; transition: transform .2s;
+  }
+  #cartFab:hover { transform: scale(1.05); }
+  #cartFab.hidden { display: none; }
+  .cart-badge {
+    background: var(--ouro); color: var(--vermelho-escuro);
+    border-radius: 50%; width: 22px; height: 22px;
+    font-size: 0.72rem; display: flex; align-items: center; justify-content: center; font-weight: 800;
+  }
+
+  /* ===== DRAWER ===== */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 300; }
+  .overlay.open { display: block; }
+  .drawer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(160deg, #2d0e0e 0%, #1a0600 100%);
+    border-radius: 20px 20px 0 0; border-top: 2px solid var(--ouro);
+    padding: 20px 18px; z-index: 400; max-height: 85vh; overflow-y: auto;
+    transform: translateY(100%); transition: transform .3s ease;
+  }
+  .drawer.open { transform: translateY(0); }
+  .drawer-handle { width: 40px; height: 4px; background: rgba(212,160,23,0.4); border-radius: 2px; margin: 0 auto 18px; }
+  .drawer h2 { color: var(--ouro-claro); margin-bottom: 14px; font-size: 1.1rem; }
+  .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid rgba(212,160,23,0.12); }
+  .cart-item-name { font-size: 0.92rem; color: var(--texto); }
+  .cart-item-qty { font-size: 0.82rem; color: var(--texto2); }
+  .cart-item-price { color: var(--ouro-claro); font-weight: 700; }
+  .cart-remove { background: none; border: none; color: #e57373; cursor: pointer; font-size: 1.1rem; padding: 0 4px; }
+  .cart-total { display: flex; justify-content: space-between; padding: 14px 0 6px; font-weight: 800; font-size: 1.1rem; color: var(--ouro-claro); border-top: 1px solid var(--borda); margin-top: 4px; }
+  .notes-field {
+    width: 100%; background: rgba(155,28,28,0.15); border: 1px solid rgba(212,160,23,0.25);
+    border-radius: 8px; padding: 10px; color: var(--texto); font-size: 0.88rem;
+    resize: vertical; margin: 8px 0 14px; min-height: 58px;
+  }
+  .notes-field::placeholder { color: var(--texto2); }
+  .notes-field:focus { outline: none; border-color: var(--ouro); }
+  .order-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--vermelho) 0%, var(--vermelho-vivo) 100%);
+    color: var(--ouro-brilho); border: 1px solid var(--ouro);
+    border-radius: 10px; padding: 14px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all .2s; letter-spacing: 0.5px;
+    box-shadow: 0 4px 16px rgba(155,28,28,0.4);
+  }
+  .order-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .order-btn:disabled { background: #3a2020; color: #666; border-color: #444; cursor: default; box-shadow: none; transform: none; }
+
+  /* ===== SUCCESS MODAL ===== */
+  .success-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 500; align-items: center; justify-content: center; }
+  .success-modal.open { display: flex; }
+  .success-box {
+    background: linear-gradient(160deg, #3a0e0e, #1a0600);
+    border: 2px solid var(--ouro); border-radius: 18px;
+    padding: 32px 24px; text-align: center; max-width: 320px; width: 90%;
+    box-shadow: 0 16px 64px rgba(155,28,28,0.6);
+  }
+  .success-icon { font-size: 3rem; margin-bottom: 10px; }
+  .success-box h3 { color: var(--ouro-claro); font-size: 1.25rem; margin-bottom: 8px; }
+  .success-box p { color: var(--texto2); font-size: 0.9rem; }
+  .order-num { font-size: 1.8rem; font-weight: 800; color: var(--ouro-claro); margin: 10px 0; text-shadow: 0 2px 8px rgba(212,160,23,0.4); }
+  .close-modal {
+    margin-top: 16px;
+    background: linear-gradient(135deg, var(--ouro) 0%, var(--ouro-claro) 100%);
+    color: var(--vermelho-escuro); border: none; padding: 11px 28px;
+    border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.95rem;
+  }
+
+  /* ===== MISC ===== */
+  .ws-status { position: fixed; top: 64px; right: 12px; font-size: 0.7rem; padding: 3px 8px; border-radius: 10px; z-index: 150; }
+  .ws-status.connected { background: rgba(27,94,32,0.8); color: #81c784; border: 1px solid #388e3c; }
+  .ws-status.disconnected { display: none; }
+  .order-status-bar { background: rgba(27,94,32,0.3); border: 1px solid #388e3c; border-radius: 8px; padding: 9px 14px; margin: 8px 16px; color: #a5d6a7; font-size: 0.88rem; display: none; }
+  .order-status-bar.show { display: block; }
+  .empty-cart { text-align: center; color: var(--texto2); padding: 20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="header-logo">🐟</span>
+    <div class="header-title">
+      <h1>Mar de Prata</h1>
+      <span class="header-sub">銀海餐廳 · RESTAURANTE</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="table-badge" id="tableBadge">Mesa —</div>
+    <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">🌐 PT</button>
+  </div>
+</header>
+
+<!-- Language dropdown -->
+<div class="lang-menu" id="langMenu">
+  <div class="lang-option active" onclick="setLang('pt')" id="opt-pt">🇵🇹 Português</div>
+  <div class="lang-option" onclick="setLang('br')" id="opt-br">🇧🇷 Português BR</div>
+  <div class="lang-option" onclick="setLang('zh')" id="opt-zh">🇨🇳 中文</div>
+</div>
+
+<div class="ws-status disconnected" id="wsStatus">⚡ online</div>
+<div class="order-status-bar" id="statusBar"></div>
+<div class="tabs" id="tabsBar"></div>
+<div id="menuContent" class="menu-section"></div>
+
+<button id="cartFab" class="hidden" onclick="openCart()">
+  🛒 <span data-i18n="cart">Carrinho</span> <span class="cart-badge" id="cartCount">0</span>
+</button>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-handle"></div>
+  <h2>🛒 <span data-i18n="cart">Carrinho</span></h2>
+  <div id="cartItems"><div class="empty-cart" data-i18n="emptyCart">Carrinho vazio</div></div>
+  <div class="cart-total"><span data-i18n="total">Total</span><span id="cartTotal">€0.00</span></div>
+  <textarea class="notes-field" id="orderNotes" data-i18n-placeholder="notesPlaceholder"></textarea>
+  <button class="order-btn" id="orderBtn" onclick="submitOrder()">🐟 <span data-i18n="orderBtn">Fazer Pedido</span></button>
+</div>
+
+<div class="success-modal" id="successModal">
+  <div class="success-box">
+    <div class="success-icon">✅</div>
+    <h3 data-i18n="orderSent">Pedido Enviado!</h3>
+    <p data-i18n="orderNum">Número do pedido:</p>
+    <div class="order-num" id="orderNumDisplay">#—</div>
+    <p data-i18n="kitchenNotified">A cozinha foi notificada. Aguarde!</p>
+    <button class="close-modal" onclick="closeSuccess()" data-i18n="close">Fechar</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script>
+// ===================== Traduções ZH dos pratos =====================
+// Chave: nome em PT exato (como está no DB)
+const ITEMS_ZH = {
+  // Entradas
+  'Pão, Manteiga e Azeitonas':   { name: '面包、黄油与橄榄', desc: '招牌餐前小食：手工面包、新鲜黄油与调味橄榄' },
+  'Amêijoas à Bulhão Pato':      { name: '蒜香蛤蜊', desc: '新鲜蛤蜊用橄榄油、大蒜和香菜翻炒而成' },
+  'Camarão ao Alho':             { name: '蒜香虎虾', desc: '虎虾以黄油和大蒜慢炒，鲜嫩入味' },
+  'Percebes':                    { name: '藤壶（鹅颈藤壶）', desc: '新鲜藤壶，海洋鲜味，原汁原味' },
+  'Pataniscas de Bacalhau':      { name: '鳕鱼薄饼配豆子', desc: '葡式传统鳕鱼薄饼，搭配豆子' },
+  'Chouriço Assado':             { name: '烤葡式香肠', desc: '阿连特茹香肠配玉米面包，炭火烤制' },
+  'Tábua de Frios':              { name: '冷盘拼盘', desc: '精选熟肉、陈年奶酪、蜂蜜与果酱，口感丰富' },
+  // Sopas
+  'Caldo Verde':                 { name: '葡式绿汤', desc: '传统汤品：卷心菜、土豆与葡式香肠' },
+  'Sopa de Marisco':             { name: '奶油海鲜浓汤', desc: '浓郁海鲜汤，以番茄和白兰地提味' },
+  'Sopa de Legumes':             { name: '时令蔬菜汤', desc: '每日精选蔬菜熬制的清汤' },
+  // Saladas
+  'Salada Verde':                { name: '田园绿色沙拉', desc: '生菜、芝麻菜、圣女果、黄瓜，配橄榄油醋汁' },
+  'Salada de Atum':              { name: '金枪鱼沙拉', desc: '金枪鱼、生菜、番茄、水煮蛋、橄榄与甜玉米' },
+  'Salada Mista':                { name: '混合沙拉', desc: '生菜、番茄、洋葱、金枪鱼、鸡蛋与橄榄' },
+  // Pratos do Mar
+  'Bacalhau à Brás':             { name: '布拉斯风味鳕鱼', desc: '碎鳕鱼配炒鸡蛋、脆土豆丝与橄榄，葡式经典' },
+  'Arroz de Lingueirão':         { name: '蛏子炖饭', desc: '新鲜蛏子与香菜同煮，浓郁的汤汁炖饭' },
+  'Cataplana de Marisco':        { name: '葡式海鲜砂锅', desc: '阿尔加维传统砂锅，汇聚各式鲜活海鲜' },
+  'Polvo à Lagareiro':           { name: '橄榄油烤章鱼', desc: '整只章鱼入炉烤制，配烤土豆和初榨橄榄油' },
+  'Açorda de Gambas':            { name: '大虾面包汤', desc: '阿连特茹风味，大虾配香菜和传统面包汤' },
+  // Pratos de Carne
+  'Frango do Campo Assado':      { name: '烤田园鸡', desc: '整只田园鸡慢烤，配烤土豆和新鲜沙拉' },
+  'Lombinho de Porco':           { name: '猪里脊配蘑菇酱', desc: '嫩猪里脊配浓郁蘑菇奶油酱和米饭' },
+  'Bife à Portuguesa':           { name: '葡式牛排', desc: '小牛肉排配荷包蛋、土豆和青椒，葡萄牙国民料理' },
+  // Grelhados
+  'Dourada Grelhada':            { name: '炭烤鲷鱼', desc: '新鲜整条鲷鱼炭火烤制，配炒时蔬' },
+  'Robalo no Sal':               { name: '盐焗鲈鱼', desc: '整条鲈鱼裹粗盐入炉焗制，保留鲜嫩原味' },
+  'Entrecôte 300g':              { name: '肋眼牛排 300克', desc: '300克小牛肉排，配伯那西酱，外焦里嫩' },
+  // Sobremesas
+  'Pudim Flan':                  { name: '焦糖布丁', desc: '经典葡式焦糖布丁，丝滑细腻' },
+  'Mousse de Chocolate':         { name: '黑巧克力慕斯', desc: '浓郁黑巧慕斯，撒上脆烤杏仁片' },
+  'Arroz Doce':                  { name: '葡式甜米布丁', desc: '传统肉桂甜米布丁，绵密香甜' },
+  'Tarte de Nata':               { name: '葡式蛋挞', desc: '自制蛋挞，撒肉桂糖粉，酥脆香嫩' },
+  'Fruta da Época':              { name: '时令鲜果拼盘', desc: '精选当季新鲜水果' },
+  'Bolo de Bolacha':             { name: '玛利亚饼干蛋糕', desc: '经典葡式饼干蛋糕，配奶油咖啡夹心' },
+  // Bebidas
+  'Água':                        { name: '矿泉水', desc: '天然或气泡矿泉水' },
+  'Vinho Verde (garrafa)':       { name: '绿酒（整瓶）', desc: '米尼奥产区白葡萄酒，清爽微酸，750毫升' },
+  'Super Bock':                  { name: '超级波克啤酒', desc: '葡萄牙国产啤酒，330毫升' },
+  'Sumo Natural':                { name: '现榨鲜橙汁', desc: '鲜橙现榨，清甜爽口' },
+  'Vinho Tinto (copo)':          { name: '红葡萄酒（杯）', desc: '阿连特茹产区红酒，150毫升' },
+  'Vinho Branco (copo)':         { name: '白葡萄酒（杯）', desc: '绿酒产区白葡萄酒，150毫升' },
+  'Vinho Tinto (garrafa)':       { name: '红葡萄酒（瓶）', desc: '阿连特茹产区红酒，750毫升' },
+  'Gin Tónico':                  { name: '金汤力', desc: '本地杜松子酒配汤力水与柠檬，清爽提神' },
+  'Refrigerante':                { name: '软饮料', desc: '可口可乐、七喜或芬达，330毫升' },
+  // Cafés e Digestivos
+  'Café / Bica':                 { name: '浓缩咖啡', desc: '葡式浓缩小咖啡，香浓醇厚' },
+  'Galão':                       { name: '奶泡咖啡', desc: '咖啡配绵密奶泡，口感顺滑' },
+  'Café com Leite':              { name: '拿铁咖啡', desc: '双份浓缩咖啡配热牛奶' },
+  'Chá':                         { name: '花草茶', desc: '精选茶种，清新怡人' },
+  'Aguardente Vínica':           { name: '葡萄白兰地', desc: '葡萄牙本地白兰地，余韵悠长' },
+  'Licor Beirão':                { name: '贝拉奥利口酒', desc: '葡萄牙经典利口酒，40毫升' },
+};
+
+// Traduções PT-BR dos pratos (apenas diferenças relevantes)
+const ITEMS_BR = {
+  'Amêijoas à Bulhão Pato':      { name: 'Mexilhões à Bulhão Pato', desc: 'Mariscos frescos refogados com azeite, alho e coentros' },
+  'Percebes':                    { name: 'Percebes (Cracas)', desc: 'Percebes frescos cozidos no ponto, iguaria do mar' },
+  'Cataplana de Marisco':        { name: 'Cataplana de Frutos do Mar', desc: 'Caçarola tradicional algarvia com frutos do mar variados' },
+  'Polvo à Lagareiro':           { name: 'Polvo ao Lagareiro', desc: 'Polvo assado no forno com batatinhas e azeite extra virgem' },
+  'Açorda de Gambas':            { name: 'Açorda de Camarões', desc: 'Açorda alentejana com camarões, coentros e pão' },
+  'Caldo Verde':                 { name: 'Caldo Verde', desc: 'Sopa tradicional portuguesa com couve, batata e linguiça' },
+  'Entrecôte 300g':              { name: 'Entreco te 300g', desc: 'Bife de contra-filé grelhado com molho béarnaise' },
+};
+
+function getItemName(item) {
+  if (currentLang === 'zh' && ITEMS_ZH[item.name]) return ITEMS_ZH[item.name].name;
+  if (currentLang === 'br' && ITEMS_BR[item.name]) return ITEMS_BR[item.name].name;
+  return item.name;
+}
+
+function getItemDesc(item) {
+  if (currentLang === 'zh' && ITEMS_ZH[item.name]) return ITEMS_ZH[item.name].desc;
+  if (currentLang === 'br' && ITEMS_BR[item.name]) return ITEMS_BR[item.name].desc;
+  return item.description || '';
+}
+
+// ===================== i18n =====================
+const TRANSLATIONS = {
+  pt: {
+    langLabel: '🌐 PT',
+    cart: 'Carrinho',
+    emptyCart: 'Carrinho vazio',
+    total: 'Total',
+    notesPlaceholder: 'Observações (alergias, preferências...)',
+    orderBtn: 'Fazer Pedido',
+    orderSent: 'Pedido Enviado!',
+    orderNum: 'Número do pedido:',
+    kitchenNotified: 'A cozinha foi notificada. Aguarde!',
+    close: 'Fechar',
+    featured: '⭐ Destaque',
+    veg: '🌿 Veg',
+    noItems: 'Sem pratos disponíveis.',
+    sending: 'A enviar...',
+    table: 'Mesa',
+    wsOnline: '⚡ online',
+    statusMap: { PENDING:'Pendente', CONFIRMED:'Confirmado ✓', PREPARING:'Em preparação 👨‍🍳', READY:'Pronto para ser servido! 🎉', SERVED:'Servido ✅', CANCELLED:'Cancelado ✗' },
+    allergens: { hasGluten:'🌾 Glúten', hasCrustaceans:'🦐 Crustáceos', hasEggs:'🥚 Ovos', hasFish:'🐟 Peixe', hasPeanuts:'🥜 Amendoins', hasSoy:'🫘 Soja', hasMilk:'🥛 Leite', hasNuts:'🌰 Frutos secos', hasCelery:'🌿 Aipo', hasMustard:'🌼 Mostarda', hasSeeds:'🌻 Sementes', hasSulphites:'🍷 Sulfitos', hasLupin:'🌱 Tremoço', hasMolluscs:'🦪 Moluscos' },
+    categories: { 'Entradas':'Entradas', 'Sopas':'Sopas', 'Saladas':'Saladas', 'Pratos do Mar':'Pratos do Mar', 'Pratos de Carne':'Pratos de Carne', 'Grelhados':'Grelhados', 'Sobremesas':'Sobremesas', 'Bebidas':'Bebidas', 'Cafés e Digestivos':'Cafés e Digestivos' }
+  },
+  br: {
+    langLabel: '🌐 BR',
+    cart: 'Carrinho',
+    emptyCart: 'Carrinho vazio',
+    total: 'Total',
+    notesPlaceholder: 'Observações (alergias, preferências...)',
+    orderBtn: 'Fazer Pedido',
+    orderSent: 'Pedido Enviado!',
+    orderNum: 'Número do pedido:',
+    kitchenNotified: 'Seu pedido foi enviado para a cozinha. Aguarde!',
+    close: 'Fechar',
+    featured: '⭐ Destaque',
+    veg: '🌿 Veg',
+    noItems: 'Sem pratos disponíveis.',
+    sending: 'Enviando...',
+    table: 'Mesa',
+    wsOnline: '⚡ online',
+    statusMap: { PENDING:'Aguardando', CONFIRMED:'Confirmado ✓', PREPARING:'Sendo preparado 👨‍🍳', READY:'Pronto! Já vem aí 🎉', SERVED:'Servido ✅', CANCELLED:'Cancelado ✗' },
+    allergens: { hasGluten:'🌾 Glúten', hasCrustaceans:'🦐 Crustáceos', hasEggs:'🥚 Ovos', hasFish:'🐟 Peixe', hasPeanuts:'🥜 Amendoim', hasSoy:'🫘 Soja', hasMilk:'🥛 Leite', hasNuts:'🌰 Castanhas', hasCelery:'🌿 Aipo', hasMustard:'🌼 Mostarda', hasSeeds:'🌻 Sementes', hasSulphites:'🍷 Sulfitos', hasLupin:'🌱 Tremoço', hasMolluscs:'🦪 Moluscos' },
+    categories: { 'Entradas':'Entradas', 'Sopas':'Sopas', 'Saladas':'Saladas', 'Pratos do Mar':'Frutos do Mar', 'Pratos de Carne':'Carnes', 'Grelhados':'Grelhados', 'Sobremesas':'Sobremesas', 'Bebidas':'Bebidas', 'Cafés e Digestivos':'Cafés e Digestivos' }
+  },
+  zh: {
+    langLabel: '🌐 中文',
+    cart: '购物车',
+    emptyCart: '购物车是空的',
+    total: '合计',
+    notesPlaceholder: '备注（过敏、偏好等...）',
+    orderBtn: '下单',
+    orderSent: '订单已提交！',
+    orderNum: '订单号：',
+    kitchenNotified: '厨房已收到您的订单，请稍候！',
+    close: '关闭',
+    featured: '⭐ 推荐',
+    veg: '🌿 素食',
+    noItems: '暂无可用菜品。',
+    sending: '提交中...',
+    table: '桌',
+    wsOnline: '⚡ 在线',
+    statusMap: { PENDING:'待确认', CONFIRMED:'已确认 ✓', PREPARING:'制作中 👨‍🍳', READY:'已出餐！🎉', SERVED:'已上桌 ✅', CANCELLED:'已取消 ✗' },
+    allergens: { hasGluten:'🌾 麸质', hasCrustaceans:'🦐 甲壳类', hasEggs:'🥚 鸡蛋', hasFish:'🐟 鱼', hasPeanuts:'🥜 花生', hasSoy:'🫘 大豆', hasMilk:'🥛 牛奶', hasNuts:'🌰 坚果', hasCelery:'🌿 芹菜', hasMustard:'🌼 芥末', hasSeeds:'🌻 种子', hasSulphites:'🍷 亚硫酸盐', hasLupin:'🌱 羽扇豆', hasMolluscs:'🦪 软体动物' },
+    categories: { 'Entradas':'前菜', 'Sopas':'汤品', 'Saladas':'沙拉', 'Pratos do Mar':'海鲜主菜', 'Pratos de Carne':'肉类主菜', 'Grelhados':'烧烤类', 'Sobremesas':'甜点', 'Bebidas':'饮品', 'Cafés e Digestivos':'咖啡及餐后饮品' }
+  }
+};
+
+let currentLang = localStorage.getItem('mdp_lang') || 'pt';
+let T = TRANSLATIONS[currentLang];
+
+function setLang(lang) {
+  currentLang = lang;
+  T = TRANSLATIONS[lang];
+  localStorage.setItem('mdp_lang', lang);
+  document.getElementById('langBtn').textContent = T.langLabel;
+  // Update active option
+  ['pt','br','zh'].forEach(l => {
+    document.getElementById('opt-' + l).classList.toggle('active', l === lang);
+  });
+  document.getElementById('langMenu').classList.remove('open');
+  applyTranslations();
+  renderTabs();
+  renderCategory(activeCategory);
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (T[key]) el.textContent = T[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (T[key]) el.placeholder = T[key];
+  });
+  const badge = document.getElementById('tableBadge');
+  if (badge && tableNum) badge.textContent = T.table + ' ' + tableNum;
+  document.getElementById('langBtn').textContent = T.langLabel;
+  document.getElementById('wsStatus').textContent = T.wsOnline;
+}
+
+function toggleLangMenu() {
+  document.getElementById('langMenu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#langBtn') && !e.target.closest('#langMenu')) {
+    document.getElementById('langMenu').classList.remove('open');
+  }
+});
+
+// ===================== APP =====================
+const params = new URLSearchParams(location.search);
+const tableNum = params.get('table') || '1';
+
+const ALL_CATEGORIES = ['Entradas','Sopas','Saladas','Pratos do Mar','Pratos de Carne','Grelhados','Sobremesas','Bebidas','Cafés e Digestivos'];
+
+let allItems = [];
+let cart = {};
+let activeCategory = ALL_CATEGORIES[0];
+
+async function loadMenu() {
+  try {
+    const res = await fetch('/api/menu/list');
+    allItems = await res.json();
+    // Set first available category as active
+    const available = ALL_CATEGORIES.filter(c => allItems.some(i => i.category === c));
+    if (available.length) activeCategory = available[0];
+    applyTranslations();
+    renderTabs();
+    renderCategory(activeCategory);
+  } catch(e) {
+    document.getElementById('menuContent').innerHTML = '<p style="text-align:center;color:#cc4444;padding:40px">Erro ao carregar menu.</p>';
+  }
+}
+
+function renderTabs() {
+  const bar = document.getElementById('tabsBar');
+  bar.innerHTML = '';
+  ALL_CATEGORIES.forEach(cat => {
+    const count = allItems.filter(i => i.category === cat).length;
+    if (!count) return;
+    const tab = document.createElement('div');
+    tab.className = 'tab' + (cat === activeCategory ? ' active' : '');
+    tab.textContent = T.categories[cat] || cat;
+    tab.onclick = () => { activeCategory = cat; renderTabs(); renderCategory(cat); };
+    bar.appendChild(tab);
+  });
+}
+
+function getAllergenBadges(item) {
+  return Object.entries(T.allergens)
+    .filter(([key]) => item[key])
+    .map(([, label]) => `<span class="allergen">${label}</span>`)
+    .join('');
+}
+
+function renderCategory(cat) {
+  const items = allItems.filter(i => i.category === cat);
+  const mc = document.getElementById('menuContent');
+  if (!items.length) { mc.innerHTML = `<p style="text-align:center;color:#4a7aac;padding:40px">${T.noItems}</p>`; return; }
+
+  mc.innerHTML = `<div class="section-title">${T.categories[cat] || cat}</div>` +
+    items.map(item => {
+      const allergenHtml = getAllergenBadges(item);
+      return `
+      <div class="item-card" id="card-${item.id}">
+        <div class="item-top">
+          <div class="item-info">
+            <div class="item-name">${getItemName(item)}${item.featured ? `<span class="badge badge-featured">${T.featured}</span>` : ''}${item.vegetarian ? `<span class="badge badge-veg">${T.veg}</span>` : ''}</div>
+            <div class="item-desc">${getItemDesc(item)}</div>
+            ${allergenHtml ? `<div class="allergens">${allergenHtml}</div>` : ''}
+          </div>
+          <div class="item-price">€${item.price.toFixed(2)}</div>
+        </div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="removeFromCart(${item.id})">−</button>
+          <span class="qty-num" id="qty-${item.id}">0</span>
+          <button class="qty-btn add" onclick="addToCart(${item.id})">+</button>
+        </div>
+      </div>`;
+    }).join('');
+
+  items.forEach(item => {
+    if (cart[item.id]) {
+      const el = document.getElementById('qty-' + item.id);
+      if (el) el.textContent = cart[item.id].qty;
+    }
+  });
+}
+
+function addToCart(id) {
+  const item = allItems.find(i => i.id === id);
+  if (!item) return;
+  if (!cart[id]) cart[id] = { item, qty: 0 };
+  cart[id].qty++;
+  const el = document.getElementById('qty-' + id);
+  if (el) el.textContent = cart[id].qty;
+  updateCartUI();
+}
+
+function removeFromCart(id) {
+  if (!cart[id] || cart[id].qty === 0) return;
+  cart[id].qty--;
+  if (cart[id].qty === 0) delete cart[id];
+  const el = document.getElementById('qty-' + id);
+  if (el) el.textContent = cart[id] ? cart[id].qty : 0;
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const total = Object.values(cart).reduce((s, e) => s + e.item.price * e.qty, 0);
+  const count = Object.values(cart).reduce((s, e) => s + e.qty, 0);
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotal').textContent = '€' + total.toFixed(2);
+  const fab = document.getElementById('cartFab');
+  count > 0 ? fab.classList.remove('hidden') : fab.classList.add('hidden');
+}
+
+function openCart() {
+  renderCartItems();
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeCart() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function renderCartItems() {
+  const container = document.getElementById('cartItems');
+  const entries = Object.values(cart);
+  if (!entries.length) { container.innerHTML = `<div class="empty-cart">${T.emptyCart}</div>`; return; }
+  container.innerHTML = entries.map(e => `
+    <div class="cart-item">
+      <div>
+        <div class="cart-item-name">${getItemName(e.item)}</div>
+        <div class="cart-item-qty">x${e.qty} · €${(e.item.price * e.qty).toFixed(2)}</div>
+      </div>
+      <button class="cart-remove" onclick="removeFromCart(${e.item.id}); renderCartItems(); updateCartUI()">✕</button>
+    </div>
+  `).join('');
+  document.getElementById('cartTotal').textContent = '€' + Object.values(cart).reduce((s,e)=>s+e.item.price*e.qty,0).toFixed(2);
+}
+
+async function submitOrder() {
+  const entries = Object.values(cart);
+  if (!entries.length) return;
+  const btn = document.getElementById('orderBtn');
+  btn.disabled = true; btn.innerHTML = `🐟 ${T.sending}`;
+
+  const payload = {
+    tableNumber: parseInt(tableNum),
+    notes: document.getElementById('orderNotes').value,
+    items: entries.map(e => ({ menuItemId: e.item.id, quantity: e.qty, notes: '' }))
+  };
+
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.success) {
+      cart = {}; updateCartUI(); closeCart();
+      document.getElementById('orderNumDisplay').textContent = '#' + data.orderId;
+      document.getElementById('successModal').classList.add('open');
+      renderTabs(); renderCategory(activeCategory);
+    } else {
+      alert('Erro: ' + (data.error || ''));
+    }
+  } catch(e) { alert('Erro de ligação.'); }
+  btn.disabled = false;
+  btn.innerHTML = `🐟 <span data-i18n="orderBtn">${T.orderBtn}</span>`;
+}
+
+function closeSuccess() {
+  document.getElementById('successModal').classList.remove('open');
+}
+
+// WebSocket
+function initWS() {
+  try {
+    const socket = new SockJS('/ws');
+    const client = Stomp.over(socket);
+    client.debug = null;
+    client.connect({}, () => {
+      const ws = document.getElementById('wsStatus');
+      ws.textContent = T.wsOnline; ws.className = 'ws-status connected';
+      client.subscribe('/topic/table/' + tableNum, (msg) => {
+        const order = JSON.parse(msg.body);
+        const bar = document.getElementById('statusBar');
+        bar.textContent = `#${order.id}: ${T.statusMap[order.status] || order.status}`;
+        bar.className = 'order-status-bar show';
+        if (order.status === 'READY') {
+          bar.style.background = '#1a3a5c'; bar.style.borderColor = '#c9a84c'; bar.style.color = '#c9a84c';
+        }
+      });
+    }, () => {
+      document.getElementById('wsStatus').className = 'ws-status disconnected';
+      setTimeout(initWS, 5000);
+    });
+  } catch(e) {}
+}
+
+// Init
+setLang(currentLang);
+loadMenu();
+initWS();
+</script>
+</body>
+</html>

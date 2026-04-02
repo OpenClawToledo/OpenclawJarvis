@@ -53,4 +53,28 @@ public class MenuController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    // POST /api/menu/admin — criar novo prato (protegido)
+    @PostMapping("/admin")
+    public ResponseEntity<?> createItem(
+            @RequestBody MenuItem item,
+            @RequestHeader("X-Admin-Secret") String secret) {
+        String adminSecret = System.getenv().getOrDefault("ADMIN_SECRET", "mar-de-prata-admin-secret");
+        if (!adminSecret.equals(secret)) return ResponseEntity.status(403).body(Map.of("error", "Negado"));
+        item.setId(null);
+        return ResponseEntity.ok(menuItemRepository.save(item));
+    }
+
+    // PUT /api/menu/admin/{id}/toggle — activar/desactivar prato (protegido)
+    @PutMapping("/admin/{id}/toggle")
+    public ResponseEntity<?> toggleItem(
+            @PathVariable Long id,
+            @RequestHeader("X-Admin-Secret") String secret) {
+        String adminSecret = System.getenv().getOrDefault("ADMIN_SECRET", "mar-de-prata-admin-secret");
+        if (!adminSecret.equals(secret)) return ResponseEntity.status(403).body(Map.of("error", "Negado"));
+        return menuItemRepository.findById(id).map(item -> {
+            item.setActive(!item.getActive());
+            return ResponseEntity.ok(menuItemRepository.save(item));
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }

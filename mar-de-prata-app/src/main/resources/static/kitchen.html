@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozinha – Mar de Prata</title>
+  <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7/bundles/stomp.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --azul: #1a3a5c;
+      --azul-light: #234d78;
+      --dourado: #c9a84c;
+      --branco: #ffffff;
+      --cinza: #f0f2f5;
+      --verde: #27ae60;
+      --laranja: #e67e22;
+      --vermelho: #e74c3c;
+      --azul-tab: #2980b9;
+      --roxo: #8e44ad;
+    }
+    body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: var(--branco); min-height: 100vh; }
+
+    /* LOGIN */
+    #login-overlay {
+      position: fixed; inset: 0;
+      background: #0d1117;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+    .login-card {
+      background: #1e2a3a;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 90%; max-width: 360px;
+      text-align: center;
+      border: 1px solid rgba(201,168,76,0.3);
+    }
+    .login-icon { font-size: 3.5rem; margin-bottom: 0.5rem; }
+    .login-card h2 { color: var(--dourado); font-size: 1.4rem; margin-bottom: 0.3rem; }
+    .login-card p { color: #aaa; font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .login-card input {
+      width: 100%; padding: 0.85rem 1rem;
+      border: 2px solid #2d3748; border-radius: 10px;
+      font-size: 1rem; margin-bottom: 1rem;
+      background: #2d3748; color: var(--branco);
+      outline: none; transition: border 0.2s;
+    }
+    .login-card input:focus { border-color: var(--dourado); }
+    .login-btn {
+      width: 100%; background: var(--dourado); color: #1a1a2e;
+      border: none; padding: 0.9rem; border-radius: 10px;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover { background: #e8c76d; }
+    .login-error { color: var(--vermelho); font-size: 0.85rem; margin-top: 0.6rem; display: none; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
+    .shake { animation: shake 0.4s; }
+
+    /* HEADER */
+    #app { display: none; }
+    header {
+      background: #0d1117;
+      padding: 0.8rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 2px solid var(--dourado);
+    }
+    .header-left { display: flex; align-items: center; gap: 0.7rem; }
+    header h1 { font-size: 1.2rem; color: var(--dourado); }
+    .ws-badge {
+      display: inline-block; padding: 0.25rem 0.75rem;
+      border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+    }
+    .ws-badge.connected { background: rgba(39,174,96,0.2); color: #2ecc71; border: 1px solid #27ae60; }
+    .ws-badge.disconnected { background: rgba(231,76,60,0.2); color: #e74c3c; border: 1px solid #c0392b; }
+    .clock { color: #aaa; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+    .logout-btn {
+      background: rgba(255,255,255,0.08); color: #ccc;
+      border: 1px solid rgba(255,255,255,0.2); padding: 0.35rem 0.8rem;
+      border-radius: 20px; cursor: pointer; font-size: 0.8rem;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.15); }
+
+    /* SOUND TOGGLE */
+    .sound-toggle {
+      background: rgba(255,255,255,0.08); color: #ccc;
+      border: 1px solid rgba(255,255,255,0.2); padding: 0.35rem 0.8rem;
+      border-radius: 20px; cursor: pointer; font-size: 0.8rem;
+    }
+
+    /* KANBAN */
+    .kanban-wrapper { padding: 1rem; overflow-x: auto; }
+    .kanban {
+      display: flex; gap: 1rem; min-width: 900px;
+    }
+    .kanban-col {
+      flex: 1; min-width: 0;
+      background: #1e2a3a;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .kanban-col-header {
+      padding: 0.8rem 1rem;
+      font-size: 0.85rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .kanban-col:nth-child(1) .kanban-col-header { background: #7d6608; }
+    .kanban-col:nth-child(2) .kanban-col-header { background: #1a5276; }
+    .kanban-col:nth-child(3) .kanban-col-header { background: #6e2f0a; }
+    .kanban-col:nth-child(4) .kanban-col-header { background: #1e5631; }
+    .kanban-col:nth-child(5) .kanban-col-header { background: #2d3748; }
+    .col-count {
+      background: rgba(255,255,255,0.15);
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 800;
+    }
+    .col-cards { padding: 0.75rem; min-height: 100px; max-height: calc(100vh - 160px); overflow-y: auto; }
+    .col-cards::-webkit-scrollbar { width: 4px; }
+    .col-cards::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+    .empty-col { color: #555; font-size: 0.85rem; text-align: center; padding: 2rem 0; }
+
+    /* ORDER CARD */
+    .order-card {
+      background: #2d3748;
+      border-radius: 10px;
+      padding: 0.85rem;
+      margin-bottom: 0.6rem;
+      border-left: 4px solid #555;
+      transition: transform 0.2s;
+    }
+    .order-card.new-order {
+      animation: pulse-new 1s ease-in-out 3;
+      border-left-color: var(--dourado);
+    }
+    @keyframes pulse-new {
+      0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+      50% { box-shadow: 0 0 0 8px rgba(201,168,76,0.3); }
+    }
+    .order-card[data-status="PENDING"] { border-left-color: #f1c40f; }
+    .order-card[data-status="CONFIRMED"] { border-left-color: var(--azul-tab); }
+    .order-card[data-status="PREPARING"] { border-left-color: var(--laranja); }
+    .order-card[data-status="READY"] { border-left-color: var(--verde); }
+    .order-card[data-status="SERVED"] { border-left-color: #555; opacity: 0.65; }
+    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .card-mesa { font-size: 1.1rem; font-weight: 800; color: var(--dourado); }
+    .card-time { font-size: 0.75rem; color: #888; }
+    .card-items { font-size: 0.85rem; color: #ccc; margin-bottom: 0.6rem; line-height: 1.6; }
+    .card-notes { font-size: 0.78rem; color: #f39c12; font-style: italic; margin-bottom: 0.5rem; }
+    .card-total { font-size: 0.85rem; color: #aaa; margin-bottom: 0.7rem; }
+    .card-elapsed { font-size: 0.75rem; color: #e74c3c; font-weight: 600; }
+    /* Sem botões de avanço — painel só leitura */
+
+    /* STATS BAR */
+    .stats-bar {
+      display: flex; gap: 1rem; padding: 0.6rem 1rem;
+      background: #0d1117; border-bottom: 1px solid #2d3748;
+      flex-wrap: wrap;
+    }
+    .stat-pill {
+      display: flex; align-items: center; gap: 0.4rem;
+      background: #1e2a3a; padding: 0.3rem 0.75rem;
+      border-radius: 20px; font-size: 0.8rem;
+    }
+    .stat-pill span.val { font-weight: 700; color: var(--dourado); }
+
+    @media (max-width: 768px) {
+      .kanban { min-width: 600px; }
+      header h1 { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-overlay">
+  <div class="login-card">
+    <div class="login-icon">👨‍🍳</div>
+    <h2>Painel de Cozinha</h2>
+    <p>Mar de Prata — Acesso restrito</p>
+    <input type="password" id="secret-input" placeholder="Senha de acesso" onkeydown="if(event.key==='Enter') doLogin()">
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="login-error">Senha incorrecta</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="header-left">
+      <span>👨‍🍳</span>
+      <h1>Mar de Prata — Cozinha</h1>
+      <span class="ws-badge disconnected" id="ws-status">⚡ Conectando...</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.6rem">
+      <span class="clock" id="clock"></span>
+      <button class="sound-toggle" id="sound-btn" onclick="toggleSound()">🔔 Som ON</button>
+      <button class="logout-btn" onclick="logout()">Sair</button>
+    </div>
+  </header>
+
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-pill">🟡 Pendentes <span class="val" id="stat-pending">0</span></div>
+    <div class="stat-pill">🟠 Em prep. <span class="val" id="stat-preparing">0</span></div>
+    <div class="stat-pill">🟢 Prontos <span class="val" id="stat-ready">0</span></div>
+    <div class="stat-pill">✅ Servidos hoje <span class="val" id="stat-served">0</span></div>
+  </div>
+
+  <div class="kanban-wrapper">
+    <div class="kanban" id="kanban">
+      <div class="kanban-col">
+        <div class="kanban-col-header">🟡 PENDENTES <span class="col-count" id="count-PENDING">0</span></div>
+        <div class="col-cards" id="cards-PENDING"></div>
+      </div>
+      <div class="kanban-col">
+        <div class="kanban-col-header">🔵 CONFIRMADO <span class="col-count" id="count-CONFIRMED">0</span></div>
+        <div class="col-cards" id="cards-CONFIRMED"></div>
+      </div>
+      <div class="kanban-col">
+        <div class="kanban-col-header">🟠 EM PREPARAÇÃO <span class="col-count" id="count-PREPARING">0</span></div>
+        <div class="col-cards" id="cards-PREPARING"></div>
+      </div>
+      <div class="kanban-col">
+        <div class="kanban-col-header">🟢 PRONTO <span class="col-count" id="count-READY">0</span></div>
+        <div class="col-cards" id="cards-READY"></div>
+      </div>
+      <div class="kanban-col">
+        <div class="kanban-col-header">✅ SERVIDO <span class="col-count" id="count-SERVED">0</span></div>
+        <div class="col-cards" id="cards-SERVED"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const NEXT_STATUS = { PENDING: 'CONFIRMED', CONFIRMED: 'PREPARING', PREPARING: 'READY', READY: 'SERVED', SERVED: null };
+const BTN_LABELS = { PENDING: '✔ Confirmar', CONFIRMED: '🍳 Preparar', PREPARING: '✅ Pronto', READY: '🍽️ Servido', SERVED: null };
+const BTN_CLASS  = { PENDING: 'btn-confirm', CONFIRMED: 'btn-prepare', PREPARING: 'btn-ready', READY: 'btn-serve' };
+
+let ADMIN_SECRET = '';
+let soundEnabled = true;
+let stompClient = null;
+let knownOrders = new Set();
+let refreshTimer = null;
+
+// === CLOCK ===
+function updateClock() {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+setInterval(updateClock, 1000); updateClock();
+
+// === LOGIN ===
+function doLogin() {
+  const val = document.getElementById('secret-input').value.trim();
+  if (!val) return;
+  ADMIN_SECRET = val;
+  // Test with a real call
+  fetch('/api/orders', { headers: { 'X-Admin-Secret': ADMIN_SECRET } })
+    .then(r => {
+      if (r.status === 403) {
+        const card = document.querySelector('.login-card');
+        card.classList.add('shake');
+        setTimeout(() => card.classList.remove('shake'), 500);
+        const err = document.getElementById('login-error');
+        err.style.display = 'block';
+        ADMIN_SECRET = '';
+        return;
+      }
+      sessionStorage.setItem('kitchen_secret', ADMIN_SECRET);
+      showApp();
+    })
+    .catch(() => {
+      // If server error, still proceed (connectivity issue)
+      sessionStorage.setItem('kitchen_secret', ADMIN_SECRET);
+      showApp();
+    });
+}
+
+function showApp() {
+  document.getElementById('login-overlay').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadOrders();
+  initWebSocket();
+  refreshTimer = setInterval(loadOrders, 15000);
+}
+
+function logout() {
+  sessionStorage.removeItem('kitchen_secret');
+  ADMIN_SECRET = '';
+  document.getElementById('login-overlay').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('secret-input').value = '';
+  if (refreshTimer) clearInterval(refreshTimer);
+  if (stompClient) stompClient.deactivate();
+}
+
+// Auto-login from session
+const saved = sessionStorage.getItem('kitchen_secret');
+if (saved) { ADMIN_SECRET = saved; showApp(); }
+
+// === SOUND ===
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('sound-btn').textContent = soundEnabled ? '🔔 Som ON' : '🔕 Som OFF';
+}
+
+function playBeep() {
+  if (!soundEnabled) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [880, 660].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine'; osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.15);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.4);
+      osc.start(ctx.currentTime + i * 0.15);
+      osc.stop(ctx.currentTime + i * 0.15 + 0.4);
+    });
+  } catch(e) {}
+}
+
+// === TIME DISPLAY ===
+function formatTime(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+}
+
+function getElapsed(iso) {
+  if (!iso) return '';
+  const mins = Math.floor((Date.now() - new Date(iso)) / 60000);
+  if (mins < 1) return '';
+  if (mins >= 20) return `⏰ ${mins}min`;
+  if (mins >= 10) return `⚠️ ${mins}min`;
+  return `${mins}min`;
+}
+
+// === BUILD CARD ===
+function buildOrderCard(order) {
+  const next = NEXT_STATUS[order.status];
+  const btnLabel = BTN_LABELS[order.status];
+  const btnClass = BTN_CLASS[order.status] || '';
+  const isNew = !knownOrders.has(order.id);
+  if (isNew) {
+    knownOrders.add(order.id);
+    if (order.status === 'PENDING') playBeep();
+  }
+
+  const items = (order.items || []).map(i =>
+    `<div>• ${i.quantity}x <strong>${i.menuItem ? i.menuItem.name : 'Item'}</strong>${i.notes ? ` <em>(${i.notes})</em>` : ''}</div>`
+  ).join('');
+
+  const elapsed = getElapsed(order.createdAt);
+
+  return `
+    <div class="order-card${isNew ? ' new-order' : ''}" id="order-${order.id}" data-status="${order.status}">
+      <div class="card-top">
+        <span class="card-mesa">Mesa ${order.tableNumber}</span>
+        <span class="card-time">${formatTime(order.createdAt)} ${elapsed ? `· <span class="card-elapsed">${elapsed}</span>` : ''}</span>
+      </div>
+      <div class="card-items">${items || '<em>Sem itens</em>'}</div>
+      ${order.notes ? `<div class="card-notes">📝 ${order.notes}</div>` : ''}
+      <div class="card-total">Total: €${(order.totalPrice || 0).toFixed(2)}</div>
+    </div>`;
+}
+
+// === KANBAN ===
+function renderKanban(orders) {
+  const STATUSES = ['PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'SERVED'];
+  const grouped = {};
+  STATUSES.forEach(s => grouped[s] = []);
+  orders.forEach(o => { if (grouped[o.status]) grouped[o.status].push(o); });
+
+  STATUSES.forEach(status => {
+    const container = document.getElementById('cards-' + status);
+    const count = document.getElementById('count-' + status);
+    const list = grouped[status];
+    count.textContent = list.length;
+    container.innerHTML = list.length === 0
+      ? '<div class="empty-col">Sem pedidos</div>'
+      : list.map(buildOrderCard).join('');
+  });
+
+  // Stats bar
+  document.getElementById('stat-pending').textContent = grouped.PENDING.length;
+  document.getElementById('stat-preparing').textContent = grouped.PREPARING.length;
+  document.getElementById('stat-ready').textContent = grouped.READY.length;
+  document.getElementById('stat-served').textContent = grouped.SERVED.length;
+}
+
+// === FETCH ORDERS ===
+async function loadOrders() {
+  try {
+    const r = await fetch('/api/orders', { headers: { 'X-Admin-Secret': ADMIN_SECRET } });
+    if (r.ok) renderKanban(await r.json());
+  } catch(e) { console.warn('Erro ao carregar:', e); }
+}
+
+// === ADVANCE ORDER ===
+async function advanceOrder(id, nextStatus) {
+  const btn = document.querySelector(`#order-${id} .advance-btn`);
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+  try {
+    await fetch(`/api/orders/${id}/status`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': ADMIN_SECRET },
+      body: JSON.stringify({ status: nextStatus })
+    });
+    await loadOrders();
+  } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Erro'; }
+  }
+}
+
+// === WEBSOCKET ===
+function initWebSocket() {
+  try {
+    const wsUrl = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`;
+    stompClient = new StompJs.Client({
+      brokerURL: wsUrl, reconnectDelay: 5000,
+      onConnect: () => {
+        document.getElementById('ws-status').textContent = '⚡ Ao vivo';
+        document.getElementById('ws-status').className = 'ws-badge connected';
+        stompClient.subscribe('/topic/kitchen', () => loadOrders());
+      },
+      onDisconnect: () => {
+        document.getElementById('ws-status').textContent = '🔴 Offline';
+        document.getElementById('ws-status').className = 'ws-badge disconnected';
+      }
+    });
+    stompClient.activate();
+  } catch(e) {}
+}
+</script>
+</body>
+</html>

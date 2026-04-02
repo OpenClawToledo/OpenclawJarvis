@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    container_name: mardeprata-backend
+    restart: unless-stopped
+    environment:
+      ADMIN_SECRET: ${ADMIN_SECRET:-mar-de-prata-admin-secret}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      BASE_URL: ${BASE_URL:-http://localhost}
+      SPRING_DATASOURCE_URL: jdbc:sqlite:/app/data/mar-de-prata.db
+    volumes:
+      - mardeprata_data:/app/data
+    networks:
+      - internal
+    expose:
+      - "8083"
+
+  nginx:
+    image: nginx:alpine
+    container_name: mardeprata-nginx
+    restart: unless-stopped
+    ports:
+      - "8090:80"   # acesso externo via porta 8090
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - internal
+    depends_on:
+      - backend
+
+volumes:
+  mardeprata_data:
+    driver: local
+
+networks:
+  internal:
+    driver: bridge
