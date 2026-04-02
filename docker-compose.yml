@@ -1,0 +1,61 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build: .
+    image: fiosmj-backend:latest
+    container_name: fiosmj-backend
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_SECRET: ${ADMIN_SECRET}
+      MP_ACCESS_TOKEN: ${MP_ACCESS_TOKEN:-}
+      MP_PUBLIC_KEY: ${MP_PUBLIC_KEY:-}
+      OPENCLAW_GATEWAY_URL: ${OPENCLAW_GATEWAY_URL:-}
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
+      MAJU_PHONE: ${MAJU_PHONE:-+553399892409}
+      TOLEDO_PHONE: ${TOLEDO_PHONE:-+351931120429}
+      BREVO_API_KEY: ${BREVO_API_KEY:-}
+      BREVO_LIST_ID: ${BREVO_LIST_ID:-0}
+    volumes:
+      - fiosmj_data:/app/data
+    networks:
+      - internal
+    expose:
+      - "8081"
+
+  nginx:
+    image: nginx:alpine
+    container_name: fiosmj-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - certbot_www:/var/www/certbot:ro
+    networks:
+      - internal
+    depends_on:
+      - backend
+
+  # Renovação automática SSL (Certbot)
+  certbot:
+    image: certbot/certbot
+    container_name: fiosmj-certbot
+    volumes:
+      - ./ssl:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;"
+
+volumes:
+  fiosmj_data:
+    driver: local
+  certbot_www:
+    driver: local
+
+networks:
+  internal:
+    driver: bridge
